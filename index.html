@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ауыл олимпиадасы · тренажер</title>
+<style>
+:root{
+  --paper:#f2eee3; --sheet:#fffdf8; --ink:#1d2a44; --muted:#6b6457; --line:#e2d9c4;
+  --red:#c0392b; --green:#2e7d32; --gold:#b7791f;
+  --c1:#2d6a3e; --c2:#2f5d62; --c3:#6b3fa0; --c4:#1f6f8b; --c5:#a8323e; --c6:#c4581b; --c7:#8a5a14; --c8:#284b8c;
+  --acc:var(--c1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 "Segoe UI",Roboto,Arial,sans-serif;
+  background-image:radial-gradient(#e3d9c2 1px,transparent 1px);background-size:20px 20px}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:1300px;margin:0 auto;padding:18px 18px 40px;display:grid;grid-template-columns:262px 1fr;gap:22px}
+header.top{grid-column:1/-1;display:flex;align-items:flex-end;gap:18px;border-bottom:3px double var(--ink);padding-bottom:10px}
+header.top h1{font:700 30px/1.1 Georgia,"Times New Roman",serif;margin:0}
+header.top .sub{color:var(--muted);font-size:14px}
+.badge{margin-left:auto;text-align:right;font:700 13px/1.3 Georgia,serif;color:var(--muted)}
+.badge b{display:block;font-size:22px;color:var(--ink)}
+nav.side{display:flex;flex-direction:column;gap:7px;position:sticky;top:10px;align-self:start}
+.ladder-title{font:700 13px Georgia,serif;color:var(--muted);display:flex;justify-content:space-between;padding:0 4px}
+.pcard{all:unset;cursor:pointer;display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:center;background:var(--sheet);border:1.5px solid var(--line);border-left:6px solid var(--c);border-radius:4px 10px 10px 4px;padding:7px 10px;box-shadow:0 1px 0 #d9cfb8;transition:transform .15s}
+.pcard:hover{transform:translateX(3px)}
+.pcard.on{border-color:var(--c);box-shadow:3px 3px 0 var(--c)}
+.pcard .no{font:700 20px Georgia,serif;color:var(--c);text-align:center}
+.pcard b{display:block;font:700 15.5px Georgia,serif;line-height:1.2}
+.pcard small{color:var(--muted);font-size:12px}
+.pcard .st{color:var(--gold);letter-spacing:1px;font-size:12px}
+.pcard .bar{height:4px;background:#eee5d2;border-radius:3px;margin-top:4px;overflow:hidden}
+.pcard .bar i{display:block;height:100%;background:var(--c);width:0;transition:width .4s}
+.side .note{font-size:12.5px;color:var(--muted);padding:4px}
+main{min-width:0}
+.sheet{background:var(--sheet);border:1.5px solid var(--line);border-radius:12px;box-shadow:0 2px 0 #d9cfb8;position:relative;overflow:hidden}
+.sheet::before{content:"";position:absolute;left:46px;top:0;bottom:0;width:1.5px;background:#efb1a8;opacity:.7}
+.phead{padding:16px 22px 0 64px}
+.phead h2{font:700 26px Georgia,serif;margin:0;color:var(--acc)}
+.phead .pts{font-size:14px;color:var(--muted)}
+.tabs{display:flex;gap:6px;padding:12px 22px 0 64px;border-bottom:1.5px solid var(--line);flex-wrap:wrap}
+.tab{all:unset;cursor:pointer;padding:8px 13px;border:1.5px solid var(--line);border-bottom:none;border-radius:10px 10px 0 0;background:#f3ecdc;font-weight:600;font-size:15px;position:relative;top:1.5px}
+.tab.on{background:var(--sheet);color:var(--acc)}
+.pane{padding:18px 26px 26px 64px}
+h3{font:700 20px Georgia,serif;margin:22px 0 8px}
+h3:first-child{margin-top:4px}
+p{margin:6px 0 10px}
+.f{font-family:"Times New Roman",Georgia,serif;font-size:21px;text-align:center;padding:10px 12px;margin:10px 0;background:#fbf6e9;border:1.5px dashed #d8c9a4;border-radius:8px;line-height:2.1}
+.f.key{background:#fff3cf;border:2px solid var(--gold)}
+.m{font-family:"Times New Roman",Georgia,serif;font-size:1.12em}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .15em;line-height:1.25}
+.fr>span:first-child{border-bottom:1.6px solid currentColor;padding:0 .25em .05em}
+.fr>span:last-child{padding:.05em .25em 0}
+.sq{white-space:nowrap}
+.sq>span{border-top:1.6px solid currentColor;padding:.12em .12em 0;margin-left:1px;display:inline-block;line-height:1.3}
+.box{border-radius:10px;padding:10px 14px;margin:10px 0;border:1.5px solid}
+.box.tip{background:#eef6ee;border-color:#a9cfae}
+.box.warn{background:#fdeeea;border-color:#e6aba1}
+.box.why{background:#eef3fa;border-color:#b6c9e3}
+.know{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:8px 0 14px}
+.know div{background:#fbf6e9;border:1.5px solid #e2d3ae;border-radius:10px;padding:8px 12px;font-size:15px}
+.know div b{display:block;font-family:Georgia,serif;color:var(--acc);margin-bottom:2px}
+/* баспалдақ */
+.rungs{position:relative;margin:14px 0 0 0;padding-left:34px}
+.rungs::before{content:"";position:absolute;left:12px;top:8px;bottom:8px;width:4px;background:repeating-linear-gradient(var(--acc) 0 10px,transparent 10px 16px);opacity:.5;border-radius:2px}
+.rung{position:relative;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 12px;background:#fff;display:none;animation:pop .35s ease}
+.rung.show{display:block}
+.rung::before{content:attr(data-n);position:absolute;left:-34px;top:8px;width:28px;height:28px;border-radius:50%;background:var(--acc);color:#fff;font:700 14px/28px Georgia;text-align:center}
+.rung .lv{font:700 12px Georgia,serif;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.rung.final{border:2px solid var(--gold);background:#fffaf0}
+.rung .ex{display:none;margin-top:6px;padding:7px 11px;background:#eef6ee;border-radius:8px;font-size:15px}
+.rung .ex.show{display:block}
+/* анимация */
+.lab{display:grid;grid-template-columns:1fr 290px;gap:16px}
+.stage{background:#fff;border:1.5px solid var(--line);border-radius:10px;position:relative}
+.stage canvas{display:block;width:100%;height:440px}
+.ctrl{display:flex;flex-direction:column;gap:10px}
+.ctrl .row{background:#fbf6e9;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.ctrl label{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.ctrl input[type=range]{width:100%;accent-color:var(--acc)}
+.btn{all:unset;cursor:pointer;text-align:center;padding:8px 14px;border-radius:8px;border:2px solid var(--ink);background:#fff;font-weight:700;font-size:15px;box-shadow:2px 2px 0 var(--ink);transition:transform .1s}
+.btn:active{transform:translate(2px,2px);box-shadow:none}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:2px 2px 0 #1d2a44}
+.btn.sm{padding:5px 10px;font-size:14px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.readout{font-family:"Times New Roman",serif;font-size:17px;background:#1d2a44;color:#f7efd9;border-radius:8px;padding:10px 12px;line-height:1.6}
+.readout b{color:#ffd57a}
+.readout .ok{color:#8be08f}.readout .bad{color:#ff9b8f}
+.caption{font-size:14px;color:var(--muted);margin-top:6px}
+/* есеп */
+.cond{background:#fffaf0;border:1.5px solid #e6d7b2;border-radius:10px;padding:12px 16px;display:flex;gap:16px;align-items:flex-start}
+.cond .txt{flex:1}
+.cond .src{display:inline-block;font:700 12px Georgia,serif;background:#f1e8d4;border-radius:8px;padding:1px 8px;margin-bottom:6px}
+.answer{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+.answer input{width:110px;padding:7px 9px;border:2px solid var(--ink);border-radius:8px;background:#fff;font-size:17px}
+.fb{font-weight:700}
+.fb.ok{color:var(--green)}.fb.bad{color:var(--red)}
+.steps{counter-reset:st;margin:12px 0}
+.step{display:none;border-left:4px solid var(--acc);background:#fbf7ec;border-radius:0 10px 10px 0;padding:8px 14px;margin:8px 0;animation:pop .35s ease}
+.step.show{display:block}
+.step h4{margin:0 0 4px;font-size:16px}
+.step h4::before{counter-increment:st;content:counter(st) "-қадам. ";color:var(--acc)}
+.step.chk{border-left-color:var(--green);background:#f1f8f1}
+.step.chk h4::before{content:"✔ Тексеру: ";color:var(--green)}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hint{display:none;background:#fff8e1;border:1.5px dashed var(--gold);border-radius:8px;padding:6px 12px;margin:6px 0}
+.hint.show{display:block}
+.sim{border:1.5px solid var(--line);border-radius:10px;padding:12px 16px;margin:12px 0;background:#fff;position:relative}
+.sim .lvl{position:absolute;right:12px;top:10px;font:700 12px Georgia,serif;padding:2px 8px;border-radius:10px;background:#f6d9d4;color:#8c2b20}
+.sim.done{border-color:#9ccc9f;background:#f6fbf5}
+.sim.done::after{content:"✓";position:absolute;right:14px;bottom:8px;font:700 26px Georgia;color:var(--green)}
+.sol{display:none;margin-top:8px;padding:8px 12px;border-left:3px solid var(--acc);background:#fbf7ec}
+.sol.show{display:block}
+.score{font-weight:700;color:var(--acc)}
+@media (max-width:1150px){
+  .lab{grid-template-columns:1fr}
+  .ctrl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));align-items:start}
+}
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  nav.side{position:static;flex-direction:row;overflow-x:auto}
+  .pcard{min-width:190px}
+  .sheet::before{left:14px}
+  .phead,.tabs,.pane{padding-left:26px}
+  .cond{flex-direction:column}
+  header.top{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Ауыл олимпиадасы · тренажер</h1>
+      <div class="sub">9 сынып · аудандық және облыстық кезеңдердің 8 есебі — оңайдан қиынға, баспалдақпен, анимациямен</div>
+    </div>
+    <div class="badge">шешілген есептер<b id="total">0</b></div>
+  </header>
+  <nav class="side" id="nav"></nav>
+  <main><div class="sheet" id="sheet"></div></main>
+</div>
+<script>
+/* ===================== көмекшілер ===================== */
+const $ = (s, el = document) => el.querySelector(s);
+const F = (a, b) => `<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const S = x => `<span class="sq">√<span>${x}</span></span>`;
+const num = s => parseFloat(String(s).replace(",", ".").replace(/\s/g, ""));
+const fx = (x, d = 2) => (Math.round(x * 10 ** d) / 10 ** d).toString().replace(".", ",");
+const near = (v, a, tol = .03) => Math.abs(v - a) <= Math.max(Math.abs(a) * tol, 1e-9);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+let solved = store.get("aul9_solved", {});
+function si(v, unit) {
+  const a = Math.abs(v);
+  if (a === 0) return "0 " + unit;
+  if (a < 9.995e-4) return fx(v * 1e6, 2) + " мк" + unit;
+  if (a < .9995) return fx(v * 1e3, 2) + " м" + unit;
+  return fx(v, 3) + " " + unit;
+}
+function txt(ctx, s, x, y, size = 14, col = "#1d2a44", bold = false) { ctx.fillStyle = col; ctx.font = `${bold ? "bold " : ""}${size}px Segoe UI`; ctx.fillText(s, x, y); }
+
+/* ===== облыстық кезең тренажерінен алынған суреттер мен анимациялар ===== */
+/* ===================== СУРЕТТЕР ===================== */
+function circuitSVG(w = 300) {
+  const box = (x, y, l) => `<rect x="${x}" y="${y - 9}" width="70" height="18" fill="#fff" stroke="#1d2a44" stroke-width="2"/><text x="${x + 35}" y="${y - 15}" text-anchor="middle" font-family="Times New Roman" font-style="italic" font-size="17">${l}</text>`;
+  return `<svg viewBox="0 0 440 170" width="${w}" aria-label="схема">
+  <g stroke="#1d2a44" stroke-width="2" fill="none">
+   <path d="M10 90H60M60 90V40H126M134 40H200V90M60 90V140H95M165 140H200V90M200 90H240M240 90V40H275M345 40H380V90M240 90V140H275M345 140H380V90M380 90H430"/>
+   <path d="M126 24V56M134 24V56" stroke-width="3"/>
+  </g>
+  <g fill="#1d2a44"><circle cx="60" cy="90" r="4"/><circle cx="200" cy="90" r="4"/><circle cx="240" cy="90" r="4"/><circle cx="380" cy="90" r="4"/></g>
+  <text x="140" y="20" font-family="Times New Roman" font-style="italic" font-size="17">C</text>
+  ${box(95, 140, "R")}${box(275, 40, "3R")}${box(275, 140, "2R")}
+  </svg>`;
+}
+function grapheneFig(cv) {
+  const ctx = cv.getContext("2d"), W = cv.width, H = cv.height, d = 16;
+  ctx.fillStyle = "#3b3f47"; ctx.fillRect(0, 0, W, H);
+  const at = latticeAtoms(d, W, H, -20, -10);
+  ctx.strokeStyle = "#9aa3ad"; ctx.lineWidth = 2;
+  at.bonds.forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); });
+  at.atoms.forEach(([x, y]) => { const g = ctx.createRadialGradient(x - 2, y - 2, 1, x, y, 5); g.addColorStop(0, "#fff"); g.addColorStop(1, "#8b939c"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 4.5, 0, 7); ctx.fill(); });
+}
+
+/* ===================== ТОР ГЕОМЕТРИЯСЫ ===================== */
+function hexVerts(cx, cy, d) { const v = []; for (let k = 0; k < 6; k++) { const a = (-90 + 60 * k) * Math.PI / 180; v.push([cx + d * Math.cos(a), cy + d * Math.sin(a)]); } return v; }
+function latticeAtoms(d, W, H, ox, oy) {
+  const atoms = new Map(), bonds = new Map(), s3 = Math.sqrt(3);
+  for (let j = -1; j * 1.5 * d < H + 2 * d; j++) for (let i = -1; i * s3 * d < W + 2 * d; i++) {
+    const cx = ox + s3 * d * (i + (((j % 2) + 2) % 2) / 2), cy = oy + 1.5 * d * j, v = hexVerts(cx, cy, d);
+    v.forEach((p, k) => {
+      const key = p.map(z => Math.round(z)).join(","); atoms.set(key, p);
+      const q = v[(k + 1) % 6], bk = [key, q.map(z => Math.round(z)).join(",")].sort().join("|"); bonds.set(bk, [p, q]);
+    });
+  }
+  return { atoms: [...atoms.values()], bonds: [...bonds.values()] };
+}
+
+/* ===================== АНИМАЦИЯЛАР ===================== */
+const ANIM = {};
+let active = null;
+
+function setupCanvas(cv) {
+  const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  cv.width = Math.max(10, r.width * dpr); cv.height = Math.max(10, r.height * dpr);
+  const ctx = cv.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, W: r.width, H: r.height };
+}
+function slider(id, label, min, max, step, val, fmt) {
+  return `<div class="row"><label><span>${label}</span><span id="${id}V"></span></label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}" data-fmt="${fmt || ""}"></div>`;
+}
+function bindSliders(root, cb) {
+  root.querySelectorAll("input[type=range]").forEach(s => {
+    const upd = () => { const f = s.dataset.fmt; $("#" + s.id + "V", root).textContent = f ? f.replace("#", fx(+s.value, 2)) : s.value; };
+    s.addEventListener("input", () => { upd(); cb && cb(); }); upd();
+  });
+}
+const val = id => +document.getElementById(id).value;
+function arrow(ctx, x1, y1, x2, y2, col, w = 3) {
+  const a = Math.atan2(y2 - y1, x2 - x1), L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return;
+  ctx.strokeStyle = ctx.fillStyle = col; ctx.lineWidth = w;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - 9 * Math.cos(a), y2 - 9 * Math.sin(a)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - 12 * Math.cos(a - .4), y2 - 12 * Math.sin(a - .4)); ctx.lineTo(x2 - 12 * Math.cos(a + .4), y2 - 12 * Math.sin(a + .4)); ctx.fill();
+}
+
+/* ---------- 1. Графен анимациясы ---------- */
+ANIM.g = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="gC"></canvas></div>
+  <div class="caption">Әр төбедегі атомның ұяшық <b>ішіне түскен бөлігі</b> боялады. Бұрышқа қарап үлесін есепте: 120° → ⅓, 60° → ⅙.</div></div>
+  <div class="ctrl">
+   <div class="btns"><button class="btn sm pri" id="gHex">Алтыбұрыш ұяшық</button><button class="btn sm" id="gRh">Ромб ұяшық</button></div>
+   <button class="btn" id="gPlay">▶ Атомдарды санау</button>
+   <div class="readout" id="gOut"></div>
+   ${slider("gA", "a, Å (ең жақын арақашықтық)", 1.2, 3, .02, 2.46, "# Å")}
+   ${slider("gM", "M, м.а.б.", 6, 30, 1, 12, "# м.а.б.")}
+   <div class="readout" id="gRes"></div>
+  </div></div>`,
+  init() {
+    this.mode = "hex"; this.t = 0; this.play = true;
+    $("#gHex").onclick = () => { this.mode = "hex"; this.t = 0; this.play = true; $("#gHex").classList.add("pri"); $("#gRh").classList.remove("pri"); };
+    $("#gRh").onclick = () => { this.mode = "rh"; this.t = 0; this.play = true; $("#gRh").classList.add("pri"); $("#gHex").classList.remove("pri"); };
+    $("#gPlay").onclick = () => { this.t = 0; this.play = true; };
+    bindSliders($("#sheet"), () => this.calc()); this.calc(); this.resize();
+  },
+  calc() {
+    const a = val("gA") * 1e-10, M = val("gM") * 1.66e-27, S6 = 3 * Math.sqrt(3) / 2 * a * a, sig = 2 * M / S6;
+    const sig2 = 2 * M / (Math.sqrt(3) / 2 * a * a);
+    $("#gRes").innerHTML = `S<sub>⬡</sub> = ${fx(S6 * 1e20, 2)}·10⁻²⁰ м²<br>σ = 2M/S = <b>${fx(sig * 1e7, 2)}·10⁻⁷ кг/м²</b><br><span style="opacity:.8">a — период болса: ${fx(sig2 * 1e7, 2)}·10⁻⁷ кг/м²</span>`;
+  },
+  resize() { this.cv = setupCanvas($("#gC")); },
+  step(dt) {
+    if (this.play) this.t += dt;
+    const { ctx, W, H } = this.cv, d = Math.max(30, Math.min(48, W / 8)), s3 = Math.sqrt(3);
+    ctx.fillStyle = "#f8f6f0"; ctx.fillRect(0, 0, W, H);
+    const ox = W / 2 - s3 * d * 2.5, oy = H / 2 - 1.5 * d * 2;
+    const L = latticeAtoms(d, W, H, ox, oy);
+    ctx.strokeStyle = "#b7bcc4"; ctx.lineWidth = 3;
+    L.bonds.forEach(([a, b]) => { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); });
+    // ұяшық
+    const cx = ox + s3 * d * 2.5, cy = oy + 1.5 * d * 2; // j=2 жұп қатар → i=2, сдвиг 0 → cx = ox + s3 d*2 ; түзету төменде
+    const c0 = [ox + s3 * d * 2, oy + 1.5 * d * 2];
+    let poly, corners;
+    const R = 13;
+    if (this.mode === "hex") {
+      poly = hexVerts(c0[0], c0[1], d);
+      corners = poly.map((p, k) => { const th = (-90 + 60 * k) * Math.PI / 180 + Math.PI; return { p, a0: th - Math.PI / 3, a1: th + Math.PI / 3, frac: "⅓" }; });
+    } else {
+      const P0 = [c0[0], c0[1] - d], a1 = [s3 * d, 0], a2 = [s3 * d / 2, 1.5 * d];
+      const P1 = [P0[0] + a1[0], P0[1]], P2 = [P1[0] + a2[0], P1[1] + a2[1]], P3 = [P0[0] + a2[0], P0[1] + a2[1]];
+      poly = [P0, P1, P2, P3]; const r = Math.PI / 180;
+      corners = [{ p: P0, a0: 0, a1: 60 * r, frac: "⅙" }, { p: P1, a0: 60 * r, a1: 180 * r, frac: "⅓" }, { p: P2, a0: 180 * r, a1: 240 * r, frac: "⅙" }, { p: P3, a0: 240 * r, a1: 360 * r, frac: "⅓" },
+        { p: [P0[0] + (a1[0] + a2[0]) / 3, P0[1] + (a1[1] + a2[1]) / 3], a0: 0, a1: 2 * Math.PI, frac: "1" }];
+    }
+    ctx.fillStyle = "rgba(47,93,98,.12)"; ctx.strokeStyle = "#2f5d62"; ctx.lineWidth = 3; ctx.setLineDash([8, 5]);
+    ctx.beginPath(); poly.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+    // атомдар
+    L.atoms.forEach(([x, y]) => { const g = ctx.createRadialGradient(x - 4, y - 4, 2, x, y, R); g.addColorStop(0, "#fff"); g.addColorStop(1, "#9aa1aa"); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, R, 0, 7); ctx.fill(); });
+    // секторлар
+    const per = 0.9; let sum = [];
+    corners.forEach((c, i) => {
+      const k = Math.max(0, Math.min(1, (this.t - i * per) / (per * .8))); if (k <= 0) return;
+      ctx.fillStyle = "#e07a2e"; ctx.beginPath(); ctx.moveTo(c.p[0], c.p[1]); ctx.arc(c.p[0], c.p[1], R, c.a0, c.a0 + (c.a1 - c.a0) * k); ctx.closePath(); ctx.fill();
+      if (k >= 1) {
+        sum.push(c.frac); const mid = (c.a0 + c.a1) / 2, rr = -(R + 13);
+        ctx.font = "bold 18px Georgia"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        const lx = c.frac === "1" ? c.p[0] : c.p[0] + rr * Math.cos(mid), ly = c.frac === "1" ? c.p[1] + R + 13 : c.p[1] + rr * Math.sin(mid);
+        ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.beginPath(); ctx.arc(lx, ly, 11, 0, 7); ctx.fill();
+        ctx.fillStyle = "#a33a00"; ctx.fillText(c.frac, lx, ly);
+      }
+    });
+    const done = sum.length === corners.length;
+    const txt = (this.mode === "hex" ? "Алтыбұрыш: " : "Ромб: ") + (sum.join(" + ") || "…") + (done ? " = 2 атом" : "");
+    let fs = 20; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    do { ctx.font = `bold ${fs}px Georgia`; } while (ctx.measureText(txt).width > W - 30 && --fs > 11);
+    ctx.fillStyle = "rgba(248,246,240,.92)"; ctx.fillRect(0, H - 42, W, 42);
+    ctx.fillStyle = "#1d2a44"; ctx.fillText(txt, 14, H - 15);
+    $("#gOut").innerHTML = this.mode === "hex"
+      ? `Ішкі бұрыш 120° ⟹ үлес <b>120/360 = ⅓</b><br>N₁ = 6 · ⅓ = <b>2</b><br>S = (3√3/2)·a²`
+      : `Бұрыштар 60° және 120° + ішінде 1 атом<br>N₁ = 2·⅙ + 2·⅓ + 1 = <b>2</b><br>S = a²·sin60°, мұнда a — тор периоды`;
+  }
+};
+
+/* ---------- 2. Лифт анимациясы ---------- */
+ANIM.l = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="lC"></canvas></div>
+  <div class="caption">Анимация 3 есе баяулатылған. Оң жақтағы график — Диярдың Жерге қатысты жылдамдығы; қызыл сызық — қауіпсіз шек √(2gH).</div></div>
+  <div class="ctrl">
+   ${slider("lN", "Бастапқы қабат N", 2, 7, 1, 3, "#-қабат")}
+   ${slider("lMk", "Кабина массасы M", 100, 3000, 50, 1400, "# кг")}
+   ${slider("lm", "Дияр массасы m", 30, 120, 5, 70, "# кг")}
+   ${slider("lh", "Секіру биіктігі h", .2, 1.6, .05, .6, "# м")}
+   <div class="btns"><button class="btn pri" id="lGo">▶ Құлату</button><button class="btn" id="lNo">Секірмей құлату</button></div>
+   <div class="readout" id="lOut"></div>
+  </div></div>`,
+  init() {
+    bindSliders($("#sheet"), () => { this.reset(); });
+    $("#lGo").onclick = () => { this.reset(); this.run = true; this.jump = true; };
+    $("#lNo").onclick = () => { this.reset(); this.run = true; this.jump = false; };
+    this.resize(); this.reset();
+  },
+  resize() { this.cv = setupCanvas($("#lC")); },
+  reset() {
+    const N = val("lN"), H = 3; this.g = 10; this.H = H; this.N = N;
+    this.yc = (N - 1) * H; this.vc = 0; this.yp = this.yc; this.vp = 0; this.t = 0; this.hist = [];
+    this.jumped = false; this.crash = false; this.land = null; this.run = false; this.shake = 0;
+    const M = val("lMk"), m = val("lm"), h = val("lh");
+    const k = M / (M + m), Nmax = 1 + Math.pow(1 + k * Math.sqrt(h / H), 2);
+    this.k = k; this.u = Math.sqrt(2 * this.g * h);
+    this.out(`Формула: N − 1 ≤ (1 + k√(h/H))²<br>k = M/(M+m) = <b>${fx(k, 3)}</b><br>N<sub>max</sub> = <b>${Math.floor(Nmax + 1e-9)}</b> (N ≤ ${fx(Nmax, 2)})`);
+  },
+  out(s) { $("#lOut").innerHTML = s; },
+  step(dt) {
+    const { ctx, W, H } = this.cv, g = this.g;
+    if (this.run && !this.land) {
+      let rem = dt / 3; // баяулату
+      while (rem > 0) {
+        const h = Math.min(rem, .002); rem -= h; this.t += h;
+        if (!this.crash) { this.vc -= g * h; this.yc += this.vc * h; }
+        this.vp -= g * h; this.yp += this.vp * h;
+        if (this.jump && !this.jumped && this.yc <= .12) {
+          this.jumped = true; this.v0 = -this.vc;
+          this.vp = this.vc + this.u * this.k; this.vc = this.vc - this.u * (1 - this.k);
+        }
+        if (!this.crash && this.yc <= 0) { this.crash = true; this.yc = 0; this.vc = 0; this.shake = .4; if (!this.jumped) this.v0 = -this.vp; }
+        if (this.yp < this.yc) this.yp = this.yc;
+        if (this.crash && this.yp <= this.yc + 1e-4 && this.vp < 0 && this.t > .01) { this.land = -this.vp; this.yp = this.yc; break; }
+        if (this.t - (this.hist.length ? this.hist[this.hist.length - 1][0] : -1) > .01) this.hist.push([this.t, -this.vp]);
+      }
+      if (this.land != null) {
+        this.hist.push([this.t, this.land]);
+        const safe = Math.sqrt(2 * g * this.H), ok = this.land <= safe + 1e-6;
+        this.out($("#lOut").innerHTML.split("<hr>")[0] + `<hr style="border-color:#445">v₀ (секіру алдында) = <b>${fx(this.v0, 2)} м/с</b><br>Қону жылдамдығы = <b>${fx(this.land, 2)} м/с</b><br>Қауіпсіз шек = ${fx(safe, 2)} м/с<br><span class="${ok ? "ok" : "bad"}">${ok ? "✔ Дияр аман!" : "✘ Жарақат алады!"}</span>`);
+      }
+    }
+    if (this.shake > 0) this.shake -= dt;
+    // сурет
+    ctx.fillStyle = "#f8f6f0"; ctx.fillRect(0, 0, W, H);
+    const x0 = 20, shW = Math.min(150, W * .3), top = 24, bot = H - 40, maxH = 6 * 3 + 2.6, sc = (bot - top) / maxH;
+    const Y = y => bot - y * sc, sx = this.shake > 0 ? Math.sin(this.t * 300) * 4 : 0;
+    ctx.fillStyle = "#cfc4b2"; ctx.fillRect(0, bot, x0 + shW + 60, H - bot);
+    ctx.fillStyle = "#e9e1d0"; ctx.fillRect(x0, top, shW, bot - top);
+    ctx.strokeStyle = "#b8ab8f"; ctx.lineWidth = 1; ctx.font = "12px Segoe UI"; ctx.fillStyle = "#6b6457";
+    for (let f = 1; f <= 7; f++) { const y = Y((f - 1) * 3); ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 + shW, y); ctx.stroke(); ctx.fillText(f + "-қаб.", x0 + shW + 4, y - 4); }
+    // кабина
+    const cw = shW * .6, chh = 2.4 * sc, cx = x0 + shW * .2 + sx, cy = Y(this.yc);
+    ctx.fillStyle = "rgba(196,88,27,.12)"; ctx.strokeStyle = "#c4581b"; ctx.lineWidth = 3;
+    ctx.fillRect(cx, cy - chh, cw, chh); ctx.strokeRect(cx, cy - chh, cw, chh);
+    if (!this.crash) { ctx.strokeStyle = "#555"; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx + cw / 2, top); ctx.lineTo(cx + cw / 2, Math.max(top, cy - chh - 60)); ctx.stroke(); ctx.setLineDash([]); }
+    // Дияр
+    const py = Y(this.yp), ph = 1.75 * sc, px = cx + cw / 2, bend = this.jumped && !this.land && this.yp - this.yc < .3 ? .25 : 0;
+    ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 3; ctx.lineCap = "round";
+    const hip = py - ph * (.45 - bend * .3), sh = py - ph * .8;
+    ctx.beginPath(); ctx.moveTo(px - 8, py); ctx.lineTo(px - 4 * (1 + bend * 3), (py + hip) / 2); ctx.lineTo(px, hip); ctx.lineTo(px + 4 * (1 + bend * 3), (py + hip) / 2); ctx.lineTo(px + 8, py); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(px, hip); ctx.lineTo(px, sh); ctx.moveTo(px - 10, sh + 12 - (this.jumped ? 14 : 0)); ctx.lineTo(px, sh + 4); ctx.lineTo(px + 10, sh + 12 - (this.jumped ? 14 : 0)); ctx.stroke();
+    ctx.fillStyle = "#1d2a44"; ctx.beginPath(); ctx.arc(px, sh - 9, 8, 0, 7); ctx.fill();
+    if (this.run && !this.land) arrow(ctx, cx + cw + 14, cy - chh / 2, cx + cw + 14, cy - chh / 2 + Math.min(70, 5 * Math.abs(this.vc)), "#c4581b");
+    if (this.jumped && !this.land) { ctx.fillStyle = "#c0392b"; ctx.font = "bold 15px Segoe UI"; ctx.fillText("СЕКІРУ!", cx - 4, cy - chh - 8); }
+    if (this.crash) { ctx.fillStyle = "#c0392b"; ctx.font = "bold 17px Georgia"; ctx.fillText("ТАРС!", cx + cw + 6, bot - 6); }
+    // график
+    const gx = x0 + shW + 80, gW = W - gx - 14, gy = top + 10, gH = bot - top - 30;
+    if (gW > 90) {
+      ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gH); ctx.lineTo(gx + gW, gy + gH); ctx.stroke();
+      const vmax = 22, tmax = Math.sqrt(2 * (this.N - 1) * this.H / g) + .35, X = t => gx + t / tmax * gW, V = v => gy + gH - v / vmax * gH;
+      ctx.fillStyle = "#1d2a44"; ctx.font = "13px Segoe UI"; ctx.fillText("v, м/с (төмен)", gx + 6, gy + 4);
+      ctx.fillText("t, с", gx + gW - 26, gy + gH + 18);
+      for (let v = 5; v <= 20; v += 5) { ctx.fillStyle = "#6b6457"; ctx.fillText(v, gx - 22, V(v) + 4); ctx.strokeStyle = "#eee5d2"; ctx.beginPath(); ctx.moveTo(gx, V(v)); ctx.lineTo(gx + gW, V(v)); ctx.stroke(); }
+      const safe = Math.sqrt(2 * g * this.H);
+      ctx.strokeStyle = "#c0392b"; ctx.setLineDash([6, 4]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(gx, V(safe)); ctx.lineTo(gx + gW, V(safe)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = "#c0392b"; ctx.fillText("қауіпсіз шек", gx + 4, V(safe) - 6);
+      ctx.strokeStyle = "#c4581b"; ctx.lineWidth = 3; ctx.beginPath();
+      this.hist.forEach(([t, v], i) => i ? ctx.lineTo(X(t), V(Math.max(-2, v))) : ctx.moveTo(X(t), V(v))); ctx.stroke();
+    }
+  }
+};
+
+/* ---------- 3. Жылу анимациясы ---------- */
+const C0 = 4200, CI = 2100, CK = 400, LAM = 340000, RR = 2.3e6, CS = 1680;
+function makeSide(segs) { return segs; }
+function Tof(segs, T0, Q, dir) { // dir=-1 ыстық (суиды), +1 суық (жылиды)
+  let T = T0, q = Q;
+  for (const s of segs) {
+    if (s.flat) { if (q <= s.flat) return { T, seg: s, part: q / s.flat }; q -= s.flat; continue; }
+    const need = s.C * Math.abs(s.to - T); if (q <= need) return { T: T + dir * q / s.C, seg: s, part: q / need }; q -= need; T = s.to;
+  }
+  return { T: T + dir * q / segs[segs.length - 1].C, seg: segs[segs.length - 1], part: 1 };
+}
+ANIM.h = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="hC"></canvas></div>
+  <div class="caption">Жылу ыстық жақтан (бу) суық жаққа (мұз + калориметр) өтеді. Горизонталь бөліктер — күй өзгерісі: температура тұрып қалады. Екі қисық кездескен жер — орнаған температура θ.</div></div>
+  <div class="ctrl">
+   ${slider("hS", "Бу массасы", 50, 400, 10, 200, "# г")}
+   ${slider("hI", "Мұз массасы", .2, 2.5, .1, 1, "# кг")}
+   ${slider("hT", "Мұздың бастапқы t", -30, 0, 1, -10, "# °C")}
+   ${slider("hK", "Калориметр (мыс)", 0, 1, .1, .5, "# кг")}
+   <button class="btn pri" id="hGo">▶ Жылу алмасуын бастау</button>
+   <div class="readout" id="hOut"></div>
+  </div></div>`,
+  init() { bindSliders($("#sheet"), () => this.calc()); $("#hGo").onclick = () => { this.k = 0; this.run = true; }; this.resize(); this.calc(); this.run = true; },
+  resize() { this.cv = setupCanvas($("#hC")); },
+  calc() {
+    const ms = val("hS") / 1000, mi = val("hI"), ti = val("hT"), mk = val("hK");
+    this.ms = ms; this.mi = mi; this.ti = ti; this.mk = mk;
+    this.hot = [{ C: CS * ms, to: 100, n: "бу суиды" }, { flat: RR * ms, n: "конденсация" }, { C: C0 * ms, to: 0, n: "су суиды" }, { flat: LAM * ms, n: "қатаю" }, { C: CI * ms, to: -60, n: "мұз суиды" }];
+    this.cold = [{ C: CI * mi + CK * mk, to: 0, n: "мұз жылиды" }, { flat: LAM * mi, n: "балқу" }, { C: C0 * mi + CK * mk, to: 100, n: "су жылиды" }, { flat: RR * mi, n: "қайнау" }, { C: 2000 * mi + CK * mk, to: 200, n: "бу жылиды" }];
+    let lo = 0, hi = 2e7;
+    for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (Tof(this.hot, 110, m, -1).T - Tof(this.cold, ti, m, 1).T > 1e-9) lo = m; else hi = m; }
+    this.Qs = hi; this.k = 0; this.run = true;
+    const h = Tof(this.hot, 110, hi, -1), c = Tof(this.cold, ti, hi, 1), th = (h.T + c.T) / 2;
+    let ice = 0, steam = 0, water = ms + mi;
+    if (c.seg.n === "балқу") { ice = mi * (1 - c.part); water = ms + mi * c.part; }
+    if (c.seg.n === "мұз жылиды") { ice = mi; water = ms; }
+    if (h.seg.n === "конденсация") { steam = ms * (1 - h.part); water -= steam; }
+    if (h.seg.n === "бу суиды") { steam = ms; water = 0; }
+    if (h.seg.n === "қатаю") { ice += ms * h.part; water -= ms * h.part; }
+    this.fin = { th, ice, steam, water };
+    $("#hOut").innerHTML = `Бу бере алатын жылу (0 °C дейін): <b>${fx((CS * ms * 10 + RR * ms + C0 * ms * 100) / 1000, 0)} кДж</b><br>Мұзды 0 °C суға айналдыру: <b>${fx(((CI * mi + CK * mk) * -ti + LAM * mi) / 1000, 0)} кДж</b><hr style="border-color:#445">θ = <b>${fx(th, 1)} °C</b><br>Соңында: мұз ${fx(ice, 2)} кг, су ${fx(water, 2)} кг${steam > 1e-4 ? ", бу " + fx(steam, 3) + " кг" : ""}`;
+  },
+  step(dt) {
+    const { ctx, W, H } = this.cv;
+    if (this.run) { this.k = Math.min(1, this.k + dt / 6); if (this.k >= 1) this.run = false; }
+    const Q = this.Qs * (1 - Math.pow(1 - this.k, 2));
+    ctx.fillStyle = "#f8f6f0"; ctx.fillRect(0, 0, W, H);
+    // ыдыс
+    const vx = 18, vw = Math.min(190, W * .24), vy = 70, vh = H - 130;
+    const h = Tof(this.hot, 110, Q, -1), c = Tof(this.cold, this.ti, Q, 1);
+    let ice = this.mi, steam = this.ms, cond = 0, melt = 0;
+    const segIdx = (segs, s) => segs.indexOf(s);
+    const hi = segIdx(this.hot, h.seg), ci = segIdx(this.cold, c.seg);
+    if (hi === 1) { steam = this.ms * (1 - h.part); } else if (hi > 1) steam = 0;
+    if (ci === 1) ice = this.mi * (1 - c.part); else if (ci > 1) ice = 0;
+    const water = this.ms + this.mi - steam - ice;
+    ctx.strokeStyle = "#b5651d"; ctx.lineWidth = 6; ctx.strokeRect(vx, vy, vw, vh);
+    ctx.fillStyle = "#b5651d"; ctx.font = "bold 13px Segoe UI"; ctx.fillText("мыс калориметр", vx, vy - 10);
+    const wl = Math.min(vh - 10, water / 2.9 * vh);
+    ctx.fillStyle = "rgba(90,150,210,.55)"; ctx.fillRect(vx + 3, vy + vh - wl - 3, vw - 6, wl);
+    const nIce = Math.round(ice / .1); ctx.fillStyle = "rgba(215,235,250,.95)"; ctx.strokeStyle = "#8fb3d1"; ctx.lineWidth = 1.5;
+    for (let i = 0; i < nIce; i++) { const x = vx + 10 + (i * 37) % (vw - 40), y = vy + vh - 26 - Math.floor(i * 37 / (vw - 40)) * 22; ctx.fillRect(x, y, 26, 18); ctx.strokeRect(x, y, 26, 18); }
+    const nS = Math.round(steam / .01);
+    for (let i = 0; i < Math.min(nS, 40); i++) { const t = performance.now() / 1000 + i; const x = vx + 15 + (i * 53) % (vw - 30), y = vy + 20 + ((i * 17) % 60) + Math.sin(t * 2) * 5; ctx.fillStyle = "rgba(160,160,170,.45)"; ctx.beginPath(); ctx.arc(x, y, 9, 0, 7); ctx.fill(); }
+    // термометрлер
+    const term = (x, T, col, lab) => {
+      const y0 = vy + vh - 4, y1 = vy + 6, Ty = t => y0 - (t + 40) / 155 * (y0 - y1);
+      ctx.fillStyle = "#fff"; ctx.strokeStyle = "#555"; ctx.lineWidth = 1.5; ctx.fillRect(x, y1, 12, y0 - y1); ctx.strokeRect(x, y1, 12, y0 - y1);
+      ctx.fillStyle = col; ctx.fillRect(x + 2, Ty(T), 8, y0 - Ty(T)); ctx.beginPath(); ctx.arc(x + 6, y0 + 8, 10, 0, 7); ctx.fill();
+      ctx.fillStyle = "#1d2a44"; ctx.font = "bold 13px Segoe UI"; ctx.fillText(fx(T, 1) + "°", x - 6, y1 - 6); ctx.font = "12px Segoe UI"; ctx.fillText(lab, x - 6, y0 + 32);
+    };
+    term(vx + vw + 18, h.T, "#c0392b", "бу"); term(vx + vw + 58, c.T, "#2a6fb0", "мұз");
+    // график
+    const gx = vx + vw + 110, gW = W - gx - 16, gy = 26, gH = H - 80;
+    if (gW > 100) {
+      const Qmax = this.Qs * 1.15, X = q => gx + q / Qmax * gW, Yt = t => gy + gH - (t + 35) / 150 * gH;
+      ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gH); ctx.lineTo(gx + gW, gy + gH); ctx.stroke();
+      ctx.font = "12px Segoe UI"; ctx.fillStyle = "#6b6457";
+      [-30, 0, 50, 100].forEach(t => { ctx.fillText(t + "°", gx - 30, Yt(t) + 4); ctx.strokeStyle = "#eee5d2"; ctx.beginPath(); ctx.moveTo(gx, Yt(t)); ctx.lineTo(gx + gW, Yt(t)); ctx.stroke(); });
+      ctx.fillStyle = "#1d2a44"; ctx.fillText("t, °C", gx + 6, gy - 8); ctx.fillText("берілген жылу Q →", gx + gW - 120, gy + gH + 20);
+      const curve = (segs, T0, dir, col) => {
+        ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.beginPath();
+        for (let i = 0; i <= 200; i++) { const q = Q * i / 200, T = Tof(segs, T0, q, dir).T; i ? ctx.lineTo(X(q), Yt(T)) : ctx.moveTo(X(q), Yt(T)); } ctx.stroke();
+        const T = Tof(segs, T0, Q, dir); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(X(Q), Yt(T.T), 6, 0, 7); ctx.fill();
+        ctx.font = "bold 13px Segoe UI"; ctx.fillText(T.seg.n, Math.min(X(Q) + 8, gx + gW - 90), Yt(T.T) + (dir < 0 ? -10 : 18));
+      };
+      curve(this.hot, 110, -1, "#c0392b"); curve(this.cold, this.ti, 1, "#2a6fb0");
+      if (this.k >= 1) {
+        const y = Yt(this.fin.th); ctx.strokeStyle = "#1e7d32"; ctx.setLineDash([5, 4]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(gx, y); ctx.lineTo(gx + gW, y); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = "#1e7d32"; ctx.font = "bold 16px Georgia"; ctx.fillText("θ = " + fx(this.fin.th, 1) + " °C", Math.min(X(this.Qs) + 10, gx + gW - 100), y - 30);
+      }
+    }
+  }
+};
+
+/* ---------- 4. Тізбек анимациясы ---------- */
+ANIM.e = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="eC"></canvas></div>
+  <div class="caption">Нүктелер — ток (жылдамдығы ток күшіне пропорционал). Кілт қосылғанда конденсатор зарядталады, ол арқылы ток біртіндеп нөлге дейін азаяды — бұл <b>орныққан режим</b>. Уақыт мыңдаған есе баяулатылған.</div></div>
+  <div class="ctrl">
+   ${slider("eQ", "Орныққан заряд q", .25, 2, .05, .75, "# мкКл")}
+   ${slider("eR", "R", 20, 100, 5, 50, "# Ом")}
+   <button class="btn pri" id="eGo">↻ Кілтті қайта қосу</button>
+   <div class="readout" id="eOut"></div>
+  </div></div>`,
+  init() { bindSliders($("#sheet"), () => this.reset()); $("#eGo").onclick = () => this.reset(); this.resize(); this.reset(); },
+  resize() { this.cv = setupCanvas($("#eC")); },
+  reset() { this.t = 0; this.ph = {}; this.qInf = val("eQ") * 1e-6; this.R = val("eR"); this.C = 15e-6; },
+  step(dt) {
+    this.t += dt; const tau = 1.3, R = this.R, C = this.C;
+    // Желі кернеуі U = 2,2·U_C∞ (R мен 1,2R тізбектей). Зарядталу: U_C(t) = U_C∞(1 − e^(−t/τ))
+    const UcInf = this.qInf / C, U = 2.2 * UcInf, Ireal = UcInf / R;
+    const q = this.qInf * (1 - Math.exp(-this.t / tau)), Uc = q / C, IR = Uc / R;
+    const Itot = (U - Uc) / (1.2 * R), Ic_real = Math.max(0, Itot - IR);
+    const I3 = Itot * 2 / 5, I2 = Itot * 3 / 5, P2 = I2 * I2 * 2 * R;
+    const { ctx, W, H } = this.cv, s = Math.min(W / 470, (H - 120) / 230), ox = (W - 450 * s) / 2, oy = 20;
+    const p = (x, y) => [ox + x * s, oy + y * s];
+    ctx.fillStyle = "#fbfaf6"; ctx.fillRect(0, 0, W, H);
+    const paths = {
+      in: [[220, 220], [20, 220], [20, 100], [60, 100]],
+      r: [[60, 100], [60, 160], [200, 160], [200, 100]],
+      c1: [[60, 100], [60, 40], [124, 40]], c2: [[136, 40], [200, 40], [200, 100]],
+      mid: [[200, 100], [240, 100]],
+      r3: [[240, 100], [240, 40], [380, 40], [380, 100]], r2: [[240, 100], [240, 160], [380, 160], [380, 100]],
+      out: [[380, 100], [430, 100], [430, 220], [240, 220]]
+    };
+    ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+    Object.values(paths).forEach(pa => { ctx.beginPath(); pa.forEach((pt, i) => { const [x, y] = p(...pt); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke(); });
+    // нүктелер (ток) — резисторлардың астында қалу үшін алдымен саламыз
+    const K = 55 / Ireal, dots = (key, I) => {
+      const pa = paths[key].map(pt => p(...pt)); let Ls = [0];
+      for (let i = 1; i < pa.length; i++) Ls.push(Ls[i - 1] + Math.hypot(pa[i][0] - pa[i - 1][0], pa[i][1] - pa[i - 1][1]));
+      const L = Ls[Ls.length - 1]; this.ph[key] = ((this.ph[key] || 0) + I * K * dt * s) % 18;
+      if (I * K < .8) return;
+      ctx.fillStyle = "#e3a21a";
+      for (let d = this.ph[key]; d < L; d += 18) { let i = 1; while (Ls[i] < d) i++; const f = (d - Ls[i - 1]) / (Ls[i] - Ls[i - 1]); ctx.beginPath(); ctx.arc(pa[i - 1][0] + (pa[i][0] - pa[i - 1][0]) * f, pa[i - 1][1] + (pa[i][1] - pa[i - 1][1]) * f, 3.6, 0, 7); ctx.fill(); }
+    };
+    dots("in", Itot); dots("r", IR); dots("c1", Ic_real); dots("c2", Ic_real); dots("mid", Itot); dots("r3", I3); dots("r2", I2); dots("out", Itot);
+    const res = (x, y, l, I) => { const [a, b] = p(x, y); ctx.fillStyle = "#fff"; ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 2.5; ctx.fillRect(a, b - 10 * s, 70 * s, 20 * s); ctx.strokeRect(a, b - 10 * s, 70 * s, 20 * s);
+      const heat = Math.min(1, I * I * 2 / (Ireal * Ireal)); ctx.fillStyle = `rgba(230,90,40,${heat * .55})`; ctx.fillRect(a + 2, b - 10 * s + 2, 70 * s - 4, 20 * s - 4);
+      ctx.fillStyle = "#1d2a44"; ctx.font = `italic bold ${16 * s}px Times New Roman`; ctx.textAlign = "center"; ctx.fillText(l, a + 35 * s, b - 15 * s); ctx.textAlign = "left"; };
+    res(95, 160, "R", IR); res(275, 40, "3R", I3 * 5 / 3); res(275, 160, "2R", I2 * 5 / 3);
+    // конденсатор
+    const [c1x, c1y] = p(124, 40), [c2x] = p(136, 40);
+    ctx.fillStyle = "#fbfaf6"; ctx.fillRect(c1x + 1, c1y - 20 * s, c2x - c1x - 2, 40 * s);
+    ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(c1x, c1y - 18 * s); ctx.lineTo(c1x, c1y + 18 * s); ctx.moveTo(c2x, c1y - 18 * s); ctx.lineTo(c2x, c1y + 18 * s); ctx.stroke();
+    const nq = Math.round(q / this.qInf * 5); ctx.font = `bold ${12 * s}px Segoe UI`;
+    for (let i = 0; i < nq; i++) { ctx.fillStyle = "#c0392b"; ctx.fillText("+", c1x - 11 * s, c1y - 14 * s + i * 7 * s); ctx.fillStyle = "#2a6fb0"; ctx.fillText("−", c2x + 3 * s, c1y - 14 * s + i * 7 * s); }
+    ctx.fillStyle = "#1d2a44"; ctx.font = `italic bold ${16 * s}px Times New Roman`; ctx.fillText("C", c1x - 2 * s, c1y - 24 * s);
+    // батарея
+    const [bx, by] = p(230, 220); ctx.fillStyle = "#fbfaf6"; ctx.fillRect(bx - 12 * s, by - 16 * s, 24 * s, 32 * s);
+    ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(bx - 6 * s, by - 16 * s); ctx.lineTo(bx - 6 * s, by + 16 * s); ctx.moveTo(bx + 6 * s, by - 8 * s); ctx.lineTo(bx + 6 * s, by + 8 * s); ctx.stroke();
+    ctx.fillStyle = "#1d2a44"; ctx.font = `${13 * s}px Segoe UI`; ctx.fillText("U = " + si(U, "В"), bx - 30 * s, by + 34 * s);
+    [[60, 100], [200, 100], [240, 100], [380, 100]].forEach(pt => { const [x, y] = p(...pt); ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.fill(); });
+    const steady = this.t > tau * 5;
+    $("#eOut").innerHTML = `${steady ? '<span class="ok">● Орныққан режим</span>' : '<span class="bad">● Зарядталу жүріп жатыр…</span>'}<br>q = <b>${si(q, "Кл")}</b>, U<sub>C</sub> = ${si(Uc, "В")}<br>I<sub>C</sub> = ${si(Ic_real, "А")}<br>I<sub>R</sub> = <b>${si(IR, "А")}</b><br>I<sub>3R</sub> = ${si(I3, "А")}, I<sub>2R</sub> = ${si(I2, "А")}<br>P<sub>2R</sub> = <b>${si(P2, "Вт")}</b>`;
+  }
+};
+
+
+/* ===================== ЖАҢА СУРЕТТЕР ===================== */
+function tetraSVG(w = 220) {
+  return `<svg viewBox="0 0 240 190" width="${w}"><g stroke="#1d2a44" stroke-width="2" fill="none">
+  <path d="M30 95L120 20L210 95L110 170Z M120 20L110 170"/><path d="M30 95H210" stroke-dasharray="6 5"/></g>
+  <g fill="#fff" stroke="#1d2a44" stroke-width="2"><circle cx="22" cy="95" r="6"/><circle cx="218" cy="95" r="6"/></g>
+  <g font-family="Times New Roman" font-style="italic" font-size="18" fill="#1d2a44"><text x="10" y="80">A</text><text x="214" y="80">B</text><text x="114" y="14">N</text><text x="104" y="188">M</text></g></svg>`;
+}
+function climbSVG(w = 150) {
+  return `<svg viewBox="0 0 150 230" width="${w}"><g stroke="#1d2a44" stroke-width="2" fill="none">
+  <circle cx="60" cy="95" r="16"/><circle cx="60" cy="128" r="16"/><path d="M44 95V30M76 128V195M60 95L105 85M60 128L105 85M105 70V100"/>
+  <path d="M10 210H140" stroke-width="2.5"/></g>
+  <rect x="26" y="16" width="36" height="14" fill="#fff" stroke="#1d2a44" stroke-width="2"/><rect x="58" y="195" width="36" height="15" fill="#fff" stroke="#1d2a44" stroke-width="2"/>
+  <g font-family="Times New Roman" font-style="italic" font-size="17" fill="#1d2a44"><text x="20" y="12">m₂</text><text x="22" y="65">l₂</text><text x="84" y="165">l₁</text><text x="100" y="208">m₁</text></g></svg>`;
+}
+
+/* ===================== ЕСЕПТЕР (оңайдан қиынға) ===================== */
+const P = [];
+
+P.push({ id: "e", src: "Облыстық кезең · №4", stars: 1, name: "Конденсатор тізбекте", color: "--c1", short: "Ом заңы, q = CU",
+  know: [["Ом заңы", "I = U/R; тізбектей — ток ортақ, параллель — кернеу ортақ"], ["Конденсатор", "q = CU; орныққан режимде ол арқылы ток жүрмейді"], ["Ток бөлінуі", "I₁ = I·R₂/(R₁ + R₂) — кіші кедергіге көп ток"], ["Қуат", "P = I²R = U²/R"]],
+  key: "Орныққан режимде конденсаторды тізбектен «алып таста» — ол тек өзіне параллель элементтің кернеуін «көрсетеді».",
+  rungs: [
+    ["Бастапқы", "Сыйымдылығы 15 мкФ конденсатордың кернеуі 0,05 В. Заряды неше микрокулон?", "мкКл", .75, "q = CU = 15·10⁻⁶·0,05 = 0,75·10⁻⁶ Кл."],
+    ["Орташа", "50 Ом резистордың ұштарындағы кернеу 0,05 В. Ол арқылы ток неше миллиампер?", "мА", 1, "I = U/R = 0,05/50 = 10⁻³ А = 1 мА."],
+    ["Қиындау", "1 мА ток параллель қосылған 150 Ом және 100 Ом резисторларға тармақталады. 100 Ом арқылы ток неше мА?", "мА", .6, "I₁₀₀ = 1·150/(150+100) = 0,6 мА — кіші кедергіге көп ток."]
+  ],
+  cond: `Параллель қосылған кедергісі <i>R</i> = 50 Ом резистор мен сыйымдылығы <i>C</i> = 15 мкФ конденсатор 2<i>R</i> және 3<i>R</i> резисторларына қосылған. Тізбек тұрақты кернеу желісіне қосылған. Орныққан режимде конденсатордың заряды 0,75 мкКл. 1) <i>R</i> резистор арқылы өтетін токты табыңыз. 2) 2<i>R</i> резисторда қандай қуат бөлінеді?`,
+  fig: () => circuitSVG(280),
+  inputs: [{ label: "I<sub>R</sub> =", unit: "мА", ans: 1 }, { label: "P<sub>2R</sub> =", unit: "мкВт", ans: 36 }],
+  hints: ["U_C = q/C, ал C мен R параллель — кернеулері тең.", "R арқылы өткен бүкіл ток 3R ∥ 2R-ге келеді."],
+  steps: [
+    ["Конденсатордың кернеуі", `<div class="f"><i>U</i> = ${F("<i>q</i>", "<i>C</i>")} = ${F("0,75·10⁻⁶", "15·10⁻⁶")} = 0,05 В</div>`],
+    ["R арқылы ток", `<div class="f key"><i>I</i><sub>R</sub> = ${F("0,05", "50")} = 1 мА</div>`],
+    ["Токтың бөлінуі", `C арқылы ток жоқ, бүкіл 1 мА 3R ∥ 2R-ге келеді: <div class="f"><i>I</i><sub>2R</sub> = 1 мА·${F("3<i>R</i>", "5<i>R</i>")} = 0,6 мА</div>`],
+    ["Қуат", `<div class="f key"><i>P</i> = <i>I</i>²·2<i>R</i> = (0,6·10⁻³)²·100 = 36 мкВт</div>`],
+    ["Басқа жолмен", `U<sub>2R</sub> = 0,6 мА·100 Ом = 0,06 В; P = U²/2R = 0,0036/100 = 36 мкВт ✓`, 1]
+  ],
+  similar: [
+    { q: "C₁ = 2 мкФ конденсатор R₁ = 100 Ом резисторға, C₂ = 3 мкФ конденсатор R₂ = 200 Ом резисторға параллель қосылған. Осы екі буын тізбектей 9 В кернеуге қосылды. Орныққан режимде C₂ конденсатордың заряды?", unit: "мкКл", ans: 18, hint: "Резисторлар болмаса, тізбектей конденсаторлардың зарядтары тең болар еді. Мұнда кернеуді резисторлар бөледі!", sol: "Ток 9/300 = 30 мА; U₂ = 30 мА·200 = 6 В; q₂ = 3 мкФ·6 В = <b>18 мкКл</b> (ал q₁ = 2·3 = 6 мкКл — тең емес!)" },
+    { q: "10 мкФ конденсатор 6 В-қа дейін зарядталып, параллель қосылған 100 Ом және 200 Ом резисторлар арқылы толық разрядталды. 200 Ом резисторда қанша жылу бөлінеді?", unit: "мкДж", ans: 60, hint: "Барлық энергия W = CU²/2 жылуға кетеді. Параллель резисторларда кернеу ортақ, сондықтан Q ~ 1/R.", sol: "W = 10·10⁻⁶·36/2 = 180 мкДж; Q₂₀₀ : Q₁₀₀ = 1 : 2 ⟹ Q₂₀₀ = <b>60 мкДж</b>" },
+    { q: "Олимпиада есебіндегі тізбекте (q = 0,75 мкКл кезіндегі желі кернеуімен) 2R резистор үзіліп қалды. Конденсатордың жаңа заряды?", unit: "мкКл", ans: .4125, tol: .02, hint: "Алдымен желі кернеуін тап: U = I(R + 1,2R). Содан кейін R + 3R тізбегін есепте.", sol: "U = 1 мА·110 Ом = 0,11 В; енді I = 0,11/200 = 0,55 мА; U<sub>C</sub> = 0,55 мА·50 = 27,5 мВ; q = <b>0,41 мкКл</b>" }
+  ]
+});
+
+P.push({ id: "g", src: "Облыстық кезең · №1", stars: 1, name: "Графен", color: "--c2", short: "Беттік тығыздық, тор",
+  know: [["Беттік тығыздық", "σ = m/S, [σ] = кг/м²"], ["Бір ұяшық жеткілікті", "σ = N₁·M / S₁"], ["Ортақ атом", "ұяшыққа тиесілі үлесі = ішкі бұрыш / 360°"], ["Аудандар", "S△ = (√3/4)a², S⬡ = (3√3/2)a²"]],
+  key: "Шексіз парақтың орнына бір ұяшықты қара: атом санын бұрыштар арқылы, ауданды үшбұрыштар арқылы табасың.",
+  rungs: [
+    ["Бастапқы", "Квадрат тордың тек төбелерінде атом бар. Бір квадрат ұяшыққа неше атом тиесілі?", "атом", 1, "Әр төбе 4 квадратқа ортақ: 4·¼ = 1."],
+    ["Орташа", "Қабырғасы 1 см дұрыс алтыбұрыштың ауданы неше см²?", "см²", 2.598, "6 үшбұрыш: 6·(√3/4)·1² = 3√3/2 ≈ 2,6 см²."],
+    ["Қиындау", "Графеннің алтыбұрыш ұяшығына неше көміртек атомы тиесілі?", "атом", 2, "Алтыбұрыштың ішкі бұрышы 120° = 360°/3: 6·⅓ = 2."]
+  ],
+  cond: `Графен – көміртек атомдарының жазық алтыбұрышты құрылымы, мұндағы ең жақын атомдар арасындағы қашықтық <i>a</i> = 2,46·10⁻¹⁰ м. Көміртек атомының массасы <i>M</i> = 12 м.а.б., 1 м.а.б. = 1,66·10⁻²⁷ кг. Аудан бірлігіне графеннің массалық тығыздығы қандай?`,
+  fig: () => '<canvas id="figG" width="170" height="130" style="border-radius:8px"></canvas>',
+  inputs: [{ label: "σ =", unit: "·10⁻⁷ кг/м²", ans: 2.53, tol: .05, alt: 7.6, altMsg: "Бұл — a тор периоды болғандағы нақты мән. Шарттың сөзімен 2,5·10⁻⁷ шығады; екеуін түсіндірсең — толық ұпай." }],
+  hints: ["Бір алтыбұрышқа 2 атом тиесілі.", "S = (3√3/2)a², σ = 2M/S."],
+  steps: [
+    ["Ұяшық және атом саны", `<div class="f"><i>N</i><sub>1</sub> = 6·${F("1", "3")} = 2</div>`],
+    ["Аудан", `<div class="f"><i>S</i> = ${F("3" + S("3"), "2")}<i>a</i>² ≈ 1,57·10⁻¹⁹ м²</div>`],
+    ["Тығыздық", `<div class="f key"><i>σ</i> = ${F("4<i>M</i>", "3" + S("3") + "<i>a</i>²")} = ${F("2·1,99·10⁻²⁶", "1,57·10⁻¹⁹")} ≈ 2,5·10⁻⁷ кг/м²</div>`],
+    ["Шындықпен салыстыру", `Шын графенде 2,46 Å — тор периоды, ең жақын атомдар арасы 1,42 Å. Онда σ ≈ 7,6·10⁻⁷ кг/м² (анықтамалық мән). Шарттағы мәліметпен 2,5·10⁻⁷ дұрыс.`, 1]
+  ],
+  similar: [
+    { q: "Графиттегі көміртек қабаттары (графен парақтары) бір-бірінен 3,35·10⁻¹⁰ м қашықтықта орналасқан. Графеннің беттік тығыздығы 7,6·10⁻⁷ кг/м² екенін біле отырып, графиттің көлемдік тығыздығын табыңыз.", unit: "кг/м³", ans: 2269, tol: .03, hint: "1 м² ауданның астында 1 м биіктікте неше қабат бар?", sol: "ρ = σ/d = 7,6·10⁻⁷ / 3,35·10⁻¹⁰ ≈ <b>2270 кг/м³</b> — анықтамалықтағы графит тығыздығымен (2,26 г/см³) дәл келеді!" },
+    { q: "Алюминий атомдарының (27 м.а.б.) бір қабаты тең қабырғалы үшбұрыштардан тұрады (әр атом 6 үшбұрыштың төбесі), көршілес атомдар арасы 3,0·10⁻¹⁰ м. Беттік тығыздық?", unit: "·10⁻⁷ кг/м²", ans: 5.75, tol: .03, hint: "Үшбұрыш төбесіндегі бұрыш 60° ⟹ үлесі ⅙.", sol: "N₁ = 3·⅙ = ½; S = (√3/4)·9·10⁻²⁰ = 3,90·10⁻²⁰ м²; σ = 0,5·27·1,66·10⁻²⁷/3,90·10⁻²⁰ ≈ <b>5,75·10⁻⁷ кг/м²</b>" },
+    { q: "Графен парағынан диаметрі 1 нм, ұзындығы 1 мкм нанотүтік оралды (σ = 7,6·10⁻⁷ кг/м²). Түтіктің массасы неше ·10⁻²¹ кг?", unit: "·10⁻²¹ кг", ans: 2.39, tol: .03, hint: "Түтіктің бүйір беті — оралған тіктөртбұрыш: S = πdL.", sol: "S = π·10⁻⁹·10⁻⁶ = 3,14·10⁻¹⁵ м²; m = σS ≈ <b>2,4·10⁻²¹ кг</b> (шамамен 120 000 атом)" }
+  ]
+});
+
+P.push({ id: "t", src: "Аудандық кезең · №3", stars: 2, name: "Резистор-тетраэдр", color: "--c3", short: "Симметрия, Кирхгоф",
+  know: [["Параллель", "1/R = 1/R₁ + 1/R₂; екі бірдей R → R/2"], ["Теңгерілген көпір", "ұштарының потенциалы тең сымда ток жоқ — оны алып тастауға болады"], ["Симметрия", "A мен B-ге қатысты бірдей орналасқан түйіндердің потенциалы тең"], ["Ом заңы", "I = U/R_жалпы"]],
+  key: "Симметрияны ізде: M мен N түйіндері A мен B-ге қатысты бірдей — MN сымы арқылы ток жүрмейді, оны «алып тастаймыз».",
+  rungs: [
+    ["Бастапқы", "Кедергілері 10 Ом екі резистор параллель қосылды. Жалпы кедергі?", "Ом", 5, "R/2 = 5 Ом."],
+    ["Орташа", "Бес бірдей резистордан жасалған көпірдің (Уитстон) диагоналінде қандай ток жүреді (мА), егер барлық кедергілер тең болса?", "мА", 0, "Диагональдың екі ұшының потенциалы тең — ток нөл."],
+    ["Қиындау", "Тетраэдрдің әр қабырғасы 10 Ом. A мен B арасындағы кедергі?", "Ом", 5, "MN-де ток жоқ ⟹ үш параллель тармақ: 2R, 2R, R ⟹ R/2 = 5 Ом."]
+  ],
+  cond: `Кедергілері бірдей <i>R</i> болатын алты бірдей резистор бір-бірімен <i>AMNB</i> тетраэдрін құрайтындай жалғанған (әр қабырғасы — бір <i>R</i> резистор). <i>A</i> және <i>B</i> арасына <i>U</i><sub>0</sub> = 12 В тұрақты кернеу беріледі. <i>AN</i> сымын кескен кезде, тізбек арқылы өтетін ток Δ<i>I</i> = 3 мА шамасына өзгерді. <i>R</i> кедергісін анықтаңыз.`,
+  fig: () => tetraSVG(220),
+  inputs: [{ label: "R =", unit: "Ом", ans: 1600 }],
+  hints: ["Кеспей тұрып: симметрия бойынша MN-де ток жоқ, R_AB = R/2.", "AN кесілгенде: A–M–(B немесе N–B) тармағы R + 2R/3 = 5R/3, ол AB-ға параллель."],
+  steps: [
+    ["Кеспей тұрып", `M мен N симметриялы ⟹ MN-де ток жоқ. Тармақтар: AMB (2<i>R</i>), ANB (2<i>R</i>), AB (<i>R</i>):<div class="f"><i>R</i><sub>1</sub> = ${F("<i>R</i>", "2")}, &nbsp; <i>I</i><sub>1</sub> = ${F("2<i>U</i><sub>0</sub>", "<i>R</i>")}</div>`],
+    ["AN кесілгеннен кейін", `M-ден B-ға екі жол: MB (<i>R</i>) және MNB (2<i>R</i>) ⟹ ${F("2<i>R</i>", "3")}. Тармақ AMB: <i>R</i> + ${F("2<i>R</i>", "3")} = ${F("5<i>R</i>", "3")}. Ол AB-ға параллель:<div class="f"><i>R</i><sub>2</sub> = ${F("<i>R</i>·5<i>R</i>/3", "<i>R</i> + 5<i>R</i>/3")} = ${F("5<i>R</i>", "8")}, &nbsp; <i>I</i><sub>2</sub> = ${F("8<i>U</i><sub>0</sub>", "5<i>R</i>")}</div>`],
+    ["Ток өзгерісі", `<div class="f key">Δ<i>I</i> = ${F("2<i>U</i><sub>0</sub>", "<i>R</i>")} − ${F("8<i>U</i><sub>0</sub>", "5<i>R</i>")} = ${F("2<i>U</i><sub>0</sub>", "5<i>R</i>")} &nbsp;⟹&nbsp; <i>R</i> = ${F("2<i>U</i><sub>0</sub>", "5Δ<i>I</i>")} = ${F("24", "0,015")} = 1600 Ом</div>`],
+    ["Мағынасы", `Сым кесілсе, кедергі артады (R/2 → 5R/8), ток азаяды ✓. 1,6 кОм — нақты резисторға тән шама ✓.`, 1]
+  ],
+  similar: [
+    { q: "Куб каркасының 12 қабырғасының әрқайсысы 12 Ом. Кубтың қарама-қарсы (бас диагональ) төбелерінің арасындағы кедергі?", unit: "Ом", ans: 10, hint: "Симметрия: A-дан шығатын 3 қабырға бірдей, B-ға кіретін 3 қабырға бірдей. Тең потенциалды түйіндерді біріктір.", sol: "R/3 + R/6 + R/3 = 5R/6 = <b>10 Ом</b>" },
+    { q: "Тетраэдрдің (R = 10 Ом) MN қабырғасын кедергісі нөлге тең сыммен ауыстырды. A мен B арасындағы кедергі неше Ом болады?", unit: "Ом", ans: 5, hint: "MN-нің екі ұшының потенциалы бұрыннан тең еді...", sol: "Ток бұрын да жүрмеген ⟹ ештеңе өзгермейді: <b>R/2 = 5 Ом</b>. Олимпиадалық «тұзақ» есеп!" },
+    { q: "Түпнұсқа тетраэдрде (R = 1600 Ом, U₀ = 12 В) AN және BM сымдары кесілді. Тізбектегі ток неше мА?", unit: "мА", ans: 10, hint: "Қалған тармақтар: AB және A–M–N–B тізбегі.", sol: "AB (R) ∥ AMNB (3R) ⟹ 3R/4 = 1200 Ом; I = 12/1200 = <b>10 мА</b>" }
+  ]
+});
+
+P.push({ id: "st", src: "Аудандық кезең · №1", stars: 2, name: "Екі тастың соқтығысы", color: "--c4", short: "Еркін түсетін санақ жүйесі",
+  know: [["Қиғаш лақтыру", "x = v cosα·t, y = v sinα·t − gt²/2"], ["Тік лақтыру", "y = y₀ − v₂t − gt²/2"], ["Салыстырмалы үдеу", "екі тастың үдеуі де g ⟹ бір-біріне қатысты үдеу нөл"], ["Соқтығысу шарты", "бір мезгілде бір нүктеде: x₁ = x₂, y₁ = y₂"]],
+  key: "«Құлап бара жатқан» санақ жүйесінде ауырлық жоғалады: екі тас түзу сызықпен бірқалыпты қозғалады. Сонда есеп геометрияға айналады!",
+  rungs: [
+    ["Бастапқы", "Екі тас бірге еркін түседі. Бір-біріне қатысты үдеуі неше м/с²?", "м/с²", 0, "Екеуінің де үдеуі g, айырмасы нөл — бір-біріне қатысты бірқалыпты қозғалады."],
+    ["Орташа", "Тас 10 м/с жылдамдықпен көкжиекке 45° бұрышпен лақтырылды. Горизонталь жылдамдығы?", "м/с", 7.07, "v cos45° = 10·0,707 ≈ 7,07 м/с."],
+    ["Қиындау", "Осы тас горизонталь бойынша 5 м қашықтықты қанша секундта жүреді?", "с", .707, "t = L / (v cosα) = 5/7,07 ≈ 0,71 с."]
+  ],
+  cond: `Екі тасты әртүрлі нүктелерден бір мезгілде лақтырады. Бірінші тас горизонтал алаңнан көкжиекке <i>α</i> бұрыш жасай <i>v</i><sub>1</sub> жылдамдықпен қозғалысын бастайды. Оның оң жағында, горизонталь бойынша <i>L</i> қашықтықта және 3<i>L</i> биіктікте екінші тас қозғалысын бастайтын нүкте орналасқан. Екінші тасты <i>v</i><sub>2</sub> жылдамдықпен вертикаль төмен лақтырады. Біраз уақыттан кейін тастар соқтығысады. <i>v</i><sub>1</sub> = 10 м/с, <i>α</i> = 45° болса, <i>v</i><sub>2</sub> жылдамдығын анықтаңыз.`,
+  inputs: [{ label: "v<sub>2</sub> =", unit: "м/с", ans: 14.14 }],
+  hints: ["Соқтығысу x = L-де болады: t = L/(v₁cosα).", "Еркін түсетін жүйеде: v₁sinα·t = 3L − v₂t (gt²/2 екі жақта да қысқарады)."],
+  steps: [
+    ["Соқтығысу уақыты", `Екінші тас тек тік қозғалады ⟹ соқтығысу <i>x</i> = <i>L</i>-де:<div class="f"><i>t</i> = ${F("<i>L</i>", "<i>v</i><sub>1</sub> cos<i>α</i>")}</div>`],
+    ["Биіктіктер тең", `<div class="f"><i>v</i><sub>1</sub> sin<i>α</i>·<i>t</i> − ${F("<i>gt</i>²", "2")} = 3<i>L</i> − <i>v</i><sub>2</sub><i>t</i> − ${F("<i>gt</i>²", "2")}</div>gt²/2 қысқарады — бұл «еркін түсетін жүйе» идеясы!`],
+    ["Жауап", `<div class="f key"><i>v</i><sub>2</sub> = ${F("3<i>L</i>", "<i>t</i>")} − <i>v</i><sub>1</sub> sin<i>α</i> = <i>v</i><sub>1</sub>(3 cos<i>α</i> − sin<i>α</i>) = 10·2·0,707 ≈ 14,1 м/с</div>`],
+    ["L неге керек емес?", `Жауап L-ге тәуелсіз ✓ — бірақ соқтығысу тас жерге түскенге дейін болуы керек: L ≤ v₁²sin2α/g = 10 м. Шекті жағдай: α → 0 болса v₂ = 3v₁ ✓ (тек горизонталь қозғалыс).`, 1]
+  ],
+  similar: [
+    { q: "Мерген биіктігі 20 м, горизонталь қашықтығы 50 м жердегі бұтақта отырған нысанаға дәл көздеп атады. Ату сәтінде нысана құлап кетеді. Оқ 30 м/с жылдамдықпен ұшса, нысана неше метр құлаған кезде оқ тиеді?", unit: "м", ans: 16.1, tol: .02, hint: "Еркін түсетін жүйеде оқ түзу ұшып нысанаға тиеді. Уақыт = көздеу сызығының ұзындығы / v.", sol: "t = √(50² + 20²)/30 = 53,85/30 = 1,795 с; құлау gt²/2 ≈ <b>16,1 м</b>" },
+    { q: "Бірінші тас 10 м/с жылдамдықпен лақтырылады, екінші тас L қашықтықта, 3L биіктікте бір мезгілде жай ғана құлатылады (v₂ = 0). Олар соқтығысуы үшін бірінші тасты көкжиекке қандай бұрышпен лақтыру керек (градус)?", unit: "°", ans: 71.57, tol: .01, hint: "v₂ = v₁(3cosα − sinα) = 0.", sol: "tgα = 3 ⟹ <b>α ≈ 71,6°</b>. Ой: тасты дәл екінші тасқа бағыттау керек!" },
+    { q: "Түпнұсқа есепте (v₁ = 10 м/с, α = 45°) соқтығысу бірінші тас жерге түскенге дейін болуы үшін L ең көп дегенде неше метр болуы мүмкін?", unit: "м", ans: 10, hint: "Бірінші тастың ұшу қашықтығы v₁²sin2α/g.", sol: "L<sub>max</sub> = 100·1/10 = <b>10 м</b>" }
+  ]
+});
+
+P.push({ id: "h", src: "Облыстық кезең · №3", stars: 3, name: "Жылулық процесс", color: "--c5", short: "Энергия бюджеті",
+  know: [["Қызу", "Q = cmΔt"], ["Күй өзгерісі", "Q = λm (балқу), Q = rm (булану/конденсация)"], ["Баланс", "Q_бер = Q_ал"], ["Ұмытпа", "калориметр де жылиды; граммды кг-ға айналдыр"]],
+  key: "Алдымен «энергия бюджетін» салыстыр: бу берген жылу мұзды толық балқытуға жете ме? Соңғы күйді білмей тұрып θ іздеме.",
+  rungs: [
+    ["Бастапқы", "0 °C-тағы 1 кг мұзды балқытуға неше кДж керек? (λ = 340 кДж/кг)", "кДж", 340, "Q = λm = 340 кДж."],
+    ["Орташа", "100 °C-тағы 200 г бу конденсацияланғанда неше кДж бөлінеді? (r = 2,3·10⁶ Дж/кг)", "кДж", 460, "Q = rm = 2,3·10⁶·0,2 = 460 кДж."],
+    ["Қиындау", "1 кг мұз (c = 2100) мен 0,5 кг мыс калориметрді (c = 400) −10 °C-тан 0 °C-қа дейін жылыту үшін неше кДж керек?", "кДж", 23, "21 кДж + 2 кДж = 23 кДж."]
+  ],
+  cond: `Массасы 500 г мыс калориметрде бастапқы температурасы −10 °C болатын 1,0 кг ұсақталған мұз бар. Ыдысқа температурасы 110 °C болатын 200 г су буы жіберіледі. 100–110 °C аралығында будың меншікті жылу сыйымдылығы 1,68 Дж/(г·°C). Калориметр ішінде қандай температура орнайды? <small>c₀ = 4200, c = 2100, c<sub>к</sub> = 400 Дж/(кг·°C); λ = 340 кДж/кг; r = 2,3·10⁶ Дж/кг.</small>`,
+  inputs: [{ label: "θ =", unit: "°C", ans: 35.2, tol: .03 }],
+  hints: ["Мұзды 0 °C суға айналдыру: 363 кДж; бу тек конденсацияланғанда: 463 кДж.", "Толық баланс: 463 360 + 840(100 − θ) = 363 000 + 4400θ."],
+  steps: [
+    ["Мұзға керек", `<div class="f">21 000 + 2 000 + 340 000 = 363 000 Дж</div>`],
+    ["Бу береді", `<div class="f">3 360 + 460 000 = 463 360 Дж &gt; 363 000 ⟹ бәрі балқиды, бәрі конденсацияланады</div>`],
+    ["Баланс", `<div class="f key">463 360 + 840(100 − <i>θ</i>) = 363 000 + 4400<i>θ</i> &nbsp;⟹&nbsp; <i>θ</i> = ${F("184 360", "5240")} ≈ 35 °C</div>`],
+    ["Тексеру", `0 &lt; 35 &lt; 100 — болжамға сай ✓. Калориметрді ұмытсаң 35,6 °C шығар еді — айырма аз, бірақ ұпай кетеді.`, 1]
+  ],
+  similar: [
+    { q: "Калориметрде 0 °C-тағы 1 кг су мен 0,5 кг мұз бар. Ыдыста 50 °C су болуы үшін 100 °C будан неше грамм жіберу керек? (калориметрді ескерме)", unit: "г", ans: 193, tol: .02, hint: "Бу: конденсация + 100-ден 50 °C-қа салқындау. Алу: мұзды балқыту + 1,5 кг суды 0-ден 50 °C-қа жылыту.", sol: "170 000 + 315 000 = m(2,3·10⁶ + 210 000) ⟹ m ≈ <b>193 г</b>" },
+    { q: "0 °C-тағы 2 кг мұзға 100 °C-тағы 0,1 кг бу жіберілді. Ыдыста неше кг мұз қалады?", unit: "кг", ans: 1.2, hint: "Бу 0 °C-қа дейін 272 кДж береді — бұл 2 кг мұзды балқытуға жете ме?", sol: "272 000/340 000 = 0,8 кг балқиды ⟹ θ = 0 °C, мұз <b>1,2 кг</b>" },
+    { q: "20 °C-тағы 1 кг суға −20 °C-тағы мұз салынды. Мұз да балқымай, су да қатпай, бәрі дәл 0 °C-қа келуі үшін мұздың массасы неше кг болуы керек?", unit: "кг", ans: 2, hint: "Күй өзгерісі жоқ: суды 0-ге дейін салқындату = мұзды 0-ге дейін жылыту.", sol: "4200·1·20 = 2100·m·20 ⟹ <b>m = 2 кг</b>" }
+  ]
+});
+
+P.push({ id: "l", src: "Облыстық кезең · №2", stars: 3, name: "Қауіпті лифт", color: "--c6", short: "Еркін түсу + импульс",
+  know: [["Еркін түсу", "v = √(2gH)"], ["Секіру", "u = √(2gh) — кабинаға қатысты"], ["Импульс", "v₁ = v₀ − u·M/(M + m)"], ["g қысқарады", "барлық жылдамдық √(2g·биіктік)"]],
+  key: "Секіру — «кері тебу» есебі: адам кабинаны итереді, кабина да қозғалады. Жылдамдықтардың бәрін √(2g·биіктік) түрінде жазсаң, g жоғалады.",
+  rungs: [
+    ["Бастапқы", "3 м биіктіктен құлағандағы жылдамдық (g = 10)?", "м/с", 7.75, "√(2·10·3) = √60 ≈ 7,75 м/с — бұл «қауіпсіз шек»."],
+    ["Орташа", "60 кг адам 300 кг қайықтан қайыққа қатысты 3 м/с жылдамдықпен секірді. Жағаға қатысты адамның жылдамдығы?", "м/с", 2.5, "u·M/(M+m) = 3·300/360 = 2,5 м/с."],
+    ["Қиындау", "Лифт 3-қабаттан 1-қабатқа (қабат 3 м) құлады. Соққы алдындағы жылдамдық?", "м/с", 10.95, "√(2·10·6) = √120 ≈ 10,95 м/с."]
+  ],
+  cond: `Физик Дияр <i>N</i>-қабаттағы лифтке кіреді, кабель үзіліп лифт құлайды. Дияр соққының алдында кабина ішінде секіріп, зиян шекпейді. <i>m</i> = 70 кг, бос кабина <i>M</i> = 1400 кг, қабат биіктігі <i>H</i> = 3 м. Дияр жерде <i>h</i> = 60 см секіреді, <i>H</i> = 3 м биіктіктен құлау зиянсыз. Мұндай трюкты қандай <i>N</i> максимал қабаттан жасауға болады? <i>m</i> ≪ <i>M</i> деп есептемеңіз.`,
+  inputs: [{ label: "N =", unit: "қабат", ans: 3, tol: .001 }],
+  hints: ["v₀ = √(2g(N−1)H); секіргеннен кейін v₁ = v₀ − u·M/(M+m).", "v₁ ≤ √(2gH) шартын √(2gH)-ке бөл."],
+  steps: [
+    ["Шарт", `<div class="f">${S("2<i>g</i>(<i>N</i>−1)<i>H</i>")} − ${F("<i>M</i>", "<i>M</i>+<i>m</i>")}${S("2<i>gh</i>")} ≤ ${S("2<i>gH</i>")}</div>`],
+    ["g қысқарады", `<div class="f key"><i>N</i> − 1 ≤ (1 + ${F("<i>M</i>", "<i>M</i>+<i>m</i>")}${S(F("<i>h</i>", "<i>H</i>"))})² = (1 + 0,952·0,447)² ≈ 2,03</div>`],
+    ["Жауап", `N ≤ 3,03 ⟹ <b>N = 3</b>`],
+    ["Сезіну", `Секіру жылдамдықты тек ~3,3 м/с-қа азайтады. 4-қабаттан қону жылдамдығы ~10 м/с &gt; 7,75 м/с ✓ (анимацияда тексер).`, 1]
+  ],
+  similar: [
+    { q: "Түпнұсқа деректермен (M = 1400 кг, m = 70 кг, H = 3 м) Дияр 3-қабаттан құлаған лифтте аман қалуы үшін жерде ең кемі неше метр биіктікке секіре алуы керек?", unit: "м", ans: .567, tol: .02, hint: "√(N−1) = 1 + k√(h/H) теңдігін h-қа қатысты шеш, N = 2.", sol: "N − 1 = 2: √2 ≤ 1 + 0,952·√(h/3) ⟹ √(h/3) ≥ 0,435 ⟹ <b>h ≥ 0,57 м</b>. Дияр 0,6 м секіреді — сондықтан 3-қабаттан аман қалды, бірақ «қор» небәрі 3 см!" },
+    { q: "Лифтте екі адам (әрқайсысы 70 кг) бірге секірсе (әрқайсысы жерде 0,6 м секіреді, M = 1400 кг), трюкты ең жоғары қай қабаттан жасауға болады?", unit: "қабат", ans: 2, tol: .001, hint: "Енді k = M/(M + 2m): кабина «жеңілдеп» кетті.", sol: "k = 1400/1540 = 0,909; (1 + 0,909·0,447)² = 1,98 ⟹ N − 1 ≤ 1,98 ⟹ <b>N = 2</b>. Көп адам — жаман!" },
+    { q: "Қабат биіктігі 3 м, 3 м-ден құлау зиянсыз. Лифт 4-қабаттан құлағанда аман қалу үшін адам жерде ең кемі қандай биіктікке секіре алуы керек? (m ≪ M)", unit: "м", ans: 1.61, tol: .02, hint: "√(N−1)·√H ≤ √H + √h.", sol: "3 ≤ 1,732 + √h ⟹ √h ≥ 1,268 ⟹ <b>h ≥ 1,61 м</b> — адамға мүмкін емес." }
+  ]
+});
+
+P.push({ id: "c", src: "Аудандық кезең · №2", stars: 4, name: "Альпинист блоктары", color: "--c7", short: "Еркін түсу + жіптің серпілісі",
+  know: [["Еркін түсу", "жіп бос тұрғанда — v = √(2g·жол)"], ["Жіптің кенет керілуі", "серпімсіз «соққы»: m₂v = (m₁ + m₂)u"], ["Жүйенің үдеуі", "a = (m₁ − m₂)g/(m₁ + m₂) — тежеледі, егер m₁ &gt; m₂"], ["Тежелу жолы", "d = u²/(2a)"]],
+  key: "Альпинист өзі бекіткен нүктеден l₂ жоғары болса, жіп керілгенше 2l₂ құлайды! Содан кейін жіптің кенет керілуі — серпімсіз соқтығыс, ал тежелу — Атвуд машинасы.",
+  rungs: [
+    ["Бастапқы", "m₂ блоктан l₂ = 2 м жоғары тұр, жіп ұзындығы l₂. Жіп керілгенге дейін m₂ неше метр құлайды?", "м", 4, "Блокқа дейін l₂, блоктан төмен тағы l₂ — барлығы 2l₂ = 4 м."],
+    ["Орташа", "4 м еркін құлағандағы жылдамдық (g = 10)?", "м/с", 8.94, "√(2·10·4) = √80 ≈ 8,94 м/с."],
+    ["Қиындау", "Жіп кенет керілгенде m₂ = 1 кг (8,94 м/с) мен тыныштықтағы m₁ = 3 кг бірдей жылдамдыққа ие болады. Ол жылдамдық?", "м/с", 2.24, "m₂v = (m₁ + m₂)u ⟹ u = 8,94/4 ≈ 2,24 м/с — серпімсіз «соққы»."]
+  ],
+  cond: `Жүйе жіп асылатын екі қозғалмайтын блоктан тұрады. Жіптің бір ұшында ұзындығы <i>l</i><sub>1</sub> жіпке ілінген массасы <i>m</i><sub>1</sub> білікше жазықтықта тұр. Ұзындығы <i>l</i><sub>2</sub> екінші ұшында массасы <i>m</i><sub>2</sub> білікше бастапқыда жіптің биіктігінде (блоктан <i>l</i><sub>2</sub> жоғары) тыныштықта тұр, сосын құлай бастайды. Екінші білікше тоқтайтын биіктікті, тоқтағанға дейінгі уақытты және ол жерге соғылмай тоқтайтын шартты табыңыз. Бастапқыда жіп керілусіз созылып тұр, жіп салмақсыз, үйкеліс жоқ.<br><b>Сандық нұсқа (тексеру үшін):</b> <i>m</i><sub>1</sub> = 3 кг, <i>m</i><sub>2</sub> = 1 кг, <i>l</i><sub>1</sub> = 5 м, <i>l</i><sub>2</sub> = 2 м, <i>g</i> = 10 м/с².`,
+  fig: () => climbSVG(140),
+  inputs: [{ label: "h =", unit: "м", ans: 2.5 }, { label: "t =", unit: "с", ans: 1.342, tol: .02 }],
+  hints: ["Блок биіктігі ≈ l₁. m₂ жіп керілгенше 2l₂ құлайды: биіктігі l₁ − l₂ болады.", "Тежелу жолы d = u²/(2a) = 2m₂²l₂/(m₁² − m₂²); уақыт: 2√(l₂/g) + u/a."],
+  steps: [
+    ["Еркін түсу (жіп бос)", `<div class="f">жол 2<i>l</i><sub>2</sub>, &nbsp; <i>v</i> = ${S("4<i>gl</i><sub>2</sub>")} = 2${S("<i>gl</i><sub>2</sub>")}, &nbsp; <i>t</i><sub>1</sub> = 2${S(F("<i>l</i><sub>2</sub>", "<i>g</i>"))}</div>Сандармен: v ≈ 8,94 м/с, t₁ ≈ 0,894 с, биіктік l₁ − l₂ = 3 м.`],
+    ["Жіптің кенет керілуі", `Жіп созылмайды — серпімсіз «соққы»: <div class="f"><i>m</i><sub>2</sub><i>v</i> = (<i>m</i><sub>1</sub> + <i>m</i><sub>2</sub>)<i>u</i> &nbsp;⟹&nbsp; <i>u</i> = ${F("<i>m</i><sub>2</sub><i>v</i>", "<i>m</i><sub>1</sub>+<i>m</i><sub>2</sub>")} ≈ 2,24 м/с</div>`],
+    ["Тежелу (Атвуд машинасы)", `<div class="f"><i>a</i> = ${F("(<i>m</i><sub>1</sub>−<i>m</i><sub>2</sub>)<i>g</i>", "<i>m</i><sub>1</sub>+<i>m</i><sub>2</sub>")} = 5 м/с², &nbsp; <i>d</i> = ${F("<i>u</i>²", "2<i>a</i>")} = ${F("2<i>m</i><sub>2</sub>²<i>l</i><sub>2</sub>", "<i>m</i><sub>1</sub>² − <i>m</i><sub>2</sub>²")} = 0,5 м</div>`],
+    ["Биіктік пен уақыт", `<div class="f key"><i>h</i> = <i>l</i><sub>1</sub> − <i>l</i><sub>2</sub> − ${F("2<i>m</i><sub>2</sub>²<i>l</i><sub>2</sub>", "<i>m</i><sub>1</sub>²−<i>m</i><sub>2</sub>²")} = 2,5 м, &nbsp; <i>t</i> = 2${S(F("<i>l</i><sub>2</sub>", "<i>g</i>"))}·${F("<i>m</i><sub>1</sub>", "<i>m</i><sub>1</sub>−<i>m</i><sub>2</sub>")} ≈ 1,34 с</div>`],
+    ["Тоқтау шарты", `<div class="f"><i>m</i><sub>1</sub> &gt; <i>m</i><sub>2</sub> &nbsp; және &nbsp; <i>l</i><sub>1</sub> &gt; <i>l</i><sub>2</sub>·${F("<i>m</i><sub>1</sub>² + <i>m</i><sub>2</sub>²", "<i>m</i><sub>1</sub>² − <i>m</i><sub>2</sub>²")}</div>Шекті жағдай: m₁ → ∞ (жерге бекітілген) болса, d → 0 — жіп бірден тоқтатады ✓; m₁ → m₂ болса, d → ∞ ✓.`, 1]
+  ],
+  similar: [
+    { q: "Сол жүйеде m₁ = 4 кг, m₂ = 2 кг, l₁ = 6 м, l₂ = 1,5 м. Екінші білікше қандай биіктікте тоқтайды?", unit: "м", ans: 3.5, hint: "d = 2m₂²l₂/(m₁² − m₂²).", sol: "d = 2·4·1,5/12 = 1 м; h = 6 − 1,5 − 1 = <b>3,5 м</b>" },
+    { q: "m₁ = 2m₂, l₂ = 2 м. Екінші білікше жерге соғылмай тоқтауы үшін l₁ ең кемі неше метр болуы керек?", unit: "м", ans: 3.33, tol: .02, hint: "l₁ > l₂(m₁² + m₂²)/(m₁² − m₂²).", sol: "l₁ &gt; 2·5/3 ≈ <b>3,33 м</b>" },
+    { q: "Түпнұсқа сандық нұсқада (m₁ = 3 кг, m₂ = 1 кг, l₂ = 2 м) жіп кенет керілген сәтте қанша механикалық энергия жылуға айналады?", unit: "Дж", ans: 30, hint: "Керілуге дейін: m₂v²/2; кейін: (m₁+m₂)u²/2.", sol: "40 Дж − 10 Дж = <b>30 Дж</b> — энергияның 75 %-ы! Сондықтан альпинистер серпімді (динамикалық) жіп қолданады." }
+  ]
+});
+
+P.push({ id: "o", src: "Аудандық кезең · №4", stars: 4, name: "Линза + айна", color: "--c8", short: "Жұқа линза, дөңес айна",
+  know: [["Линза", "1/F = (n − 1)(1/R₁ + 1/R₂); екі жағы R, n = 1,5 ⟹ F = R"], ["Жұқа линза формуласы", "1/d + 1/f = 1/F"], ["Дөңес айна", "фокусы жалған: F_айна = −R/2"], ["Кескін", "f &gt; 0 — нақты (линзаның арғы жағында), f &lt; 0 — жалған"]],
+  key: "Бір линза — екі оптикалық жүйе: сынған сәулелер линза кескінін, бетінен шағылған сәулелер дөңес айна кескінін береді. Екеуінің орнын бір осьте салыстыр.",
+  rungs: [
+    ["Бастапқы", "Екі жағының қисықтық радиусы 20 см, n = 1,5 линзаның фокус аралығы неше см?", "см", 20, "1/F = 0,5·(1/20 + 1/20) = 1/20 ⟹ F = R = 20 см."],
+    ["Орташа", "Қисықтық радиусы 20 см дөңес айнаның фокус аралығының модулі неше см?", "см", 10, "|F| = R/2 = 10 см (фокус жалған — айнаның артында)."],
+    ["Қиындау", "F = 20 см линзадан 30 см қашықтықтағы шамның кескіні линзадан неше см қашықтықта?", "см", 60, "1/f = 1/20 − 1/30 = 1/60 ⟹ f = 60 см (нақты кескін)."]
+  ],
+  cond: `Санжар көрсеткіші <i>n</i> = 1,5 шыныдан жасалған дөңес линза тапты, оның екі жағының қисықтық радиусы бірдей <i>R</i>. Балауыз шаммен тәжірибе жасап, линзаның екі кескін беретінін байқады: екінші кескінді линзадан шағылған сәулелердің аз бөлігі береді. Екі кескін арасындағы қашықтықты жарық көзінен линзаға дейінгі <i>d</i> қашықтыққа тәуелді табыңыз. Кескіндерді тұрғызыңыз. Линзаның шамға жақын беті ғана айна болып жұмыс істейді. <small>1/F = (n − 1)(1/R₁ + 1/R₂).</small><br><b>Сандық нұсқа:</b> <i>R</i> = 20 см, <i>d</i> = 30 см.`,
+  inputs: [{ label: "Δ =", unit: "см", ans: 52.5 }],
+  hints: ["Линза: F = R, кескін f₁ = dR/(d − R). Айна (дөңес): F = −R/2.", "Айна кескіні жалған, беттің артында: f₂ = dR/(2d + R). Δ = |f₁ − f₂|."],
+  steps: [
+    ["Линзаның фокусы", `<div class="f">${F("1", "<i>F</i>")} = 0,5·${F("2", "<i>R</i>")} &nbsp;⟹&nbsp; <i>F</i> = <i>R</i></div>`],
+    ["Сынған сәулелер — линза кескіні", `<div class="f"><i>f</i><sub>1</sub> = ${F("<i>dR</i>", "<i>d</i> − <i>R</i>")}</div>d &gt; R — нақты кескін линзаның арғы жағында; d &lt; R — жалған, шам жағында.`],
+    ["Шағылған сәулелер — айна кескіні", `Дөңес айна: <span class="m">1/<i>d</i> + 1/<i>f</i> = −2/<i>R</i></span><div class="f"><i>f</i><sub>2</sub> = −${F("<i>dR</i>", "2<i>d</i> + <i>R</i>")} &nbsp;(жалған, беттің артында, линзаның арғы жағында)</div>`],
+    ["Арақашықтық", `Екі кескін де линзаның арғы жағынан өлшенеді (d &gt; R болса):<div class="f key">Δ = ${F("<i>dR</i>", "<i>d</i>−<i>R</i>")} − ${F("<i>dR</i>", "2<i>d</i>+<i>R</i>")} = ${F("<i>dR</i>(<i>d</i> + 2<i>R</i>)", "|<i>d</i> − <i>R</i>|(2<i>d</i> + <i>R</i>)")}</div>d &lt; R болғанда да сол формула (кескіндер линзаның екі жағында). Сандармен: Δ = 30·20·70/(10·80) = <b>52,5 см</b>.`],
+    ["Шекті жағдайлар", `d → R: линза кескіні шексіздікке кетеді, Δ → ∞ ✓. d → ∞: f₁ → R, f₂ → R/2, Δ → R/2 ✓ (фокустар арасы).`, 1]
+  ],
+  similar: [
+    { q: "Сол линза (R = 20 см, n = 1,5), шам линзадан 10 см қашықтықта. Екі кескіннің арақашықтығы?", unit: "см", ans: 25, hint: "d &lt; R: линза кескіні жалған, шам жағында.", sol: "f₁ = −200/10 = −20 см (шам жағында), айна кескіні +200/40 = +5 см ⟹ Δ = <b>25 см</b>" },
+    { q: "Сол линза, шам 60 см қашықтықта. Кескіндердің арақашықтығы?", unit: "см", ans: 21.43, tol: .02, hint: "Δ = dR(d + 2R)/((d − R)(2d + R)).", sol: "Δ = 60·20·100/(40·140) ≈ <b>21,4 см</b>" },
+    { q: "Шамды линзаға қандай d (d &gt; R, R = 20 см) қашықтықта қойса, кескіндердің арақашықтығы 3R болады?", unit: "см", ans: 28.44, tol: .02, hint: "x = d/R деп белгіле: x(x + 2) = 3(x − 1)(2x + 1).", sol: "5x² − 5x − 3 = 0 ⟹ x = (5 + √85)/10 ≈ 1,422 ⟹ d ≈ <b>28,4 см</b>" }
+  ]
+});
+
+/* ===================== ЖАҢА АНИМАЦИЯЛАР ===================== */
+/* --- тетраэдр --- */
+ANIM.t = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="tC"></canvas></div>
+  <div class="caption">Түйін түсі — потенциал (қызыл = 12 В, көк = 0). Нүктелер — ток, жылдамдығы ток күшіне пропорционал. M мен N бірдей түсті болса — MN-де ток жоқ!</div></div>
+  <div class="ctrl">
+   <div class="btns"><button class="btn sm" id="tAN">✂ AN кесу</button><button class="btn sm" id="tMN">✂ MN кесу</button><button class="btn sm" id="tBM">✂ BM кесу</button></div>
+   ${slider("tR", "R", 200, 3000, 100, 1600, "# Ом")}
+   ${slider("tU", "U₀", 2, 24, 1, 12, "# В")}
+   <div class="readout" id="tOut"></div>
+  </div></div>`,
+  init() {
+    this.cut = {}; this.ph = {};
+    ["AN", "MN", "BM"].forEach(k => $("#t" + k).onclick = () => { this.cut[k] = !this.cut[k]; $("#t" + k).classList.toggle("pri", !!this.cut[k]); this.calc(); });
+    bindSliders($("#sheet"), () => this.calc()); this.resize(); this.calc();
+  },
+  resize() { this.cv = setupCanvas($("#tC")); },
+  calc() {
+    const R = val("tR"), U = val("tU"), g = e => this.cut[e] ? 0 : 1 / R;
+    const E = { AB: 1 / R, AM: 1 / R, AN: g("AN"), MB: g("BM"), NB: 1 / R, MN: g("MN") };
+    // M, N потенциалдары: Кирхгоф
+    const a11 = E.AM + E.MB + E.MN, a12 = -E.MN, b1 = E.AM * U, a21 = -E.MN, a22 = E.AN + E.NB + E.MN, b2 = E.AN * U;
+    const det = a11 * a22 - a12 * a21, VM = (b1 * a22 - a12 * b2) / det, VN = (a11 * b2 - a21 * b1) / det;
+    this.V = { A: U, B: 0, M: VM, N: VN }; this.U = U;
+    this.I = {}; for (const [k, gg] of Object.entries(E)) this.I[k] = (this.V[k[0]] - this.V[k[1]]) * gg;
+    const Itot = this.I.AB + this.I.AM + this.I.AN, I0 = 2 * U / R;
+    this.Imax = I0 / 2;
+    $("#tOut").innerHTML = `φ<sub>M</sub> = ${fx(VM, 2)} В, φ<sub>N</sub> = ${fx(VN, 2)} В<br>R<sub>AB</sub> = <b>${fx(U / Itot, 1)} Ом</b> (${fx(U / Itot / R, 3)}·R)<br>I = <b>${si(Itot, "А")}</b><br>Бүтін тетраэдрде: ${si(I0, "А")}<br>ΔI = <b>${si(I0 - Itot, "А")}</b>`;
+  },
+  step(dt) {
+    const { ctx, W, H } = this.cv, s = Math.min(W / 520, H / 400), ox = (W - 480 * s) / 2, oy = 30;
+    const P = { A: [40, 190], B: [440, 190], N: [250, 30], M: [220, 360] }, p = k => [ox + P[k][0] * s, oy + P[k][1] * s];
+    ctx.fillStyle = "#fbfaf6"; ctx.fillRect(0, 0, W, H);
+    const col = v => { const k = v / this.U; return `rgb(${Math.round(42 + 150 * k)},${Math.round(111 - 50 * k)},${Math.round(176 - 140 * k)})`; };
+    for (const e of ["AB", "AM", "AN", "MB", "NB", "MN"]) {
+      const cut = (e === "AN" && this.cut.AN) || (e === "MB" && this.cut.BM) || (e === "MN" && this.cut.MN);
+      const [x1, y1] = p(e[0]), [x2, y2] = p(e[1]);
+      ctx.strokeStyle = cut ? "#d8cfc0" : "#1d2a44"; ctx.lineWidth = 3; ctx.setLineDash(e === "AB" ? [8, 6] : cut ? [3, 6] : []);
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+      // резистор белгісі
+      const fr = e === "AB" ? .27 : e === "MN" ? .72 : .5; // AB мен MN белгілері қиылыста бір-біріне түспесін
+      const mx = x1 + (x2 - x1) * fr, my = y1 + (y2 - y1) * fr, an = Math.atan2(y2 - y1, x2 - x1);
+      ctx.save(); ctx.translate(mx, my); ctx.rotate(an); ctx.fillStyle = cut ? "#f3efe6" : "#fff"; ctx.strokeStyle = cut ? "#d8cfc0" : "#1d2a44"; ctx.lineWidth = 2;
+      ctx.fillRect(-22, -8, 44, 16); ctx.strokeRect(-22, -8, 44, 16); ctx.restore();
+      if (cut) { txt(ctx, "✂", mx - 7, my - 12, 18, "#c0392b", true); continue; }
+      const I = this.I[e], L = Math.hypot(x2 - x1, y2 - y1); this.ph[e] = ((this.ph[e] || 0) + I / this.Imax * 60 * dt) % 22;
+      if (Math.abs(I) / this.Imax < .01) { txt(ctx, "I = 0", mx + 10, my - 14, 14, "#2e7d32", true); continue; }
+      ctx.fillStyle = "#e3a21a";
+      for (let d = ((this.ph[e] % 22) + 22) % 22; d < L; d += 22) { if (Math.abs(d - L * fr) < 24) continue; ctx.beginPath(); ctx.arc(x1 + (x2 - x1) * d / L, y1 + (y2 - y1) * d / L, 4, 0, 7); ctx.fill(); }
+    }
+    for (const k of ["A", "B", "M", "N"]) { const [x, y] = p(k); ctx.fillStyle = col(this.V[k]); ctx.beginPath(); ctx.arc(x, y, 13, 0, 7); ctx.fill(); txt(ctx, k, x - 5, y + 5, 15, "#fff", true); txt(ctx, fx(this.V[k], 1) + " В", x + 14, y - 12, 13, "#1d2a44"); }
+  }
+};
+
+/* --- екі тас --- */
+ANIM.st = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="sC"></canvas></div>
+  <div class="caption">«Құлайтын жүйе» батырмасы ауырлықты «өшіреді»: бақылаушы да g үдеумен құлап бара жатыр деп елестет. Сонда екі тас та <b>түзу</b> сызықпен жүреді — соқтығысу шарты жай геометрия!</div></div>
+  <div class="ctrl">
+   ${slider("sv2", "Екінші тас v₂", 0, 25, .1, 8, "# м/с")}
+   ${slider("sL", "L", 2, 9, .5, 5, "# м")}
+   ${slider("sa", "α", 20, 80, 1, 45, "#°")}
+   <div class="btns"><button class="btn pri" id="sGo">▶ Лақтыру</button><button class="btn sm" id="sBest">v₂ дұрыс мән</button><button class="btn sm" id="sFr">Құлайтын жүйе</button></div>
+   <div class="readout" id="sOut"></div>
+  </div></div>`,
+  init() {
+    this.fr = false; bindSliders($("#sheet"), () => this.reset());
+    $("#sGo").onclick = () => { this.reset(); this.run = true; };
+    $("#sBest").onclick = () => { const a = val("sa") * Math.PI / 180, v = 10 * (3 * Math.cos(a) - Math.sin(a)); if (v < 0) { $("#sOut").innerHTML += '<br><span class="bad">Бұл бұрышта v₂ теріс — тасты жоғары лақтыру керек!</span>'; return; } $("#sv2").value = v.toFixed(1); $("#sv2").dispatchEvent(new Event("input")); this.run = true; };
+    $("#sFr").onclick = () => { this.fr = !this.fr; $("#sFr").classList.toggle("pri", this.fr); };
+    this.resize(); this.reset();
+  },
+  resize() { this.cv = setupCanvas($("#sC")); },
+  reset() {
+    this.t = 0; this.run = false; this.hit = null; this.tr1 = []; this.tr2 = [];
+    const a = val("sa") * Math.PI / 180, L = val("sL"), v2 = val("sv2"), need = 10 * (3 * Math.cos(a) - Math.sin(a)), tc = L / (10 * Math.cos(a));
+    $("#sOut").innerHTML = `Соқтығысу уақыты t = L/(v₁cosα) = <b>${fx(tc, 2)} с</b><br>Қажет v₂ = v₁(3cosα − sinα) = <b>${fx(need, 2)} м/с</b><br>Қазір v₂ = ${fx(v2, 1)} м/с ${Math.abs(v2 - need) < .15 ? '<span class="ok">✔</span>' : ""}<br>Ұшу қашықтығы: ${fx(100 * Math.sin(2 * a) / 10, 1)} м`;
+  },
+  pos(t) {
+    const a = val("sa") * Math.PI / 180, L = val("sL"), v2 = val("sv2"), g = this.fr ? 0 : 10;
+    return [[10 * Math.cos(a) * t, 10 * Math.sin(a) * t - g * t * t / 2], [L, 3 * L - v2 * t - g * t * t / 2]];
+  },
+  step(dt) {
+    const { ctx, W, H } = this.cv, L = val("sL");
+    if (this.run && !this.hit) {
+      let rem = dt * .5;
+      while (rem > 0 && !this.hit) { const h = Math.min(rem, .002); rem -= h; this.t += h; const [p1, p2] = this.pos(this.t); if (Math.hypot(p1[0] - p2[0], p1[1] - p2[1]) < .12) this.hit = p1; if ((!this.fr && (p1[1] < 0 || p2[1] < 0)) || this.t > 4) this.run = false; }
+    }
+    const xr = L + 3, yr = 3 * L + 2, sc = Math.min((W - 60) / (xr + 1), (H - 50) / (yr + (this.fr ? 3 : 0))), x0 = 40, y0 = H - 30;
+    const X = x => x0 + x * sc, Y = y => y0 - y * sc;
+    ctx.fillStyle = this.fr ? "#f2f0fb" : "#f4f8fb"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#cdbf9e"; ctx.fillRect(0, y0, W, H - y0);
+    ctx.fillStyle = "#9b8d77"; ctx.fillRect(X(L) + 6, Y(3 * L), 26, 3 * L * sc);
+    // траекториялар
+    const N = 80, T = Math.max(this.t, .001);
+    [0, 1].forEach(k => { ctx.strokeStyle = k ? "rgba(31,79,191,.5)" : "rgba(192,57,43,.5)"; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.beginPath(); for (let i = 0; i <= N; i++) { const pp = this.pos(T * i / N)[k]; i ? ctx.lineTo(X(pp[0]), Y(pp[1])) : ctx.moveTo(X(pp[0]), Y(pp[1])); } ctx.stroke(); ctx.setLineDash([]); });
+    const [p1, p2] = this.pos(this.t);
+    ctx.fillStyle = "#c0392b"; ctx.beginPath(); ctx.arc(X(p1[0]), Y(p1[1]), 8, 0, 7); ctx.fill();
+    ctx.fillStyle = "#1f4fbf"; ctx.beginPath(); ctx.arc(X(p2[0]), Y(p2[1]), 8, 0, 7); ctx.fill();
+    txt(ctx, "1", X(p1[0]) - 4, Y(p1[1]) + 4, 11, "#fff", true); txt(ctx, "2", X(p2[0]) - 4, Y(p2[1]) + 4, 11, "#fff", true);
+    if (this.hit) { ctx.strokeStyle = "#e3a21a"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(X(this.hit[0]), Y(this.hit[1]), 20, 0, 7); ctx.stroke(); txt(ctx, "СОҚТЫҒЫСТЫ!", X(this.hit[0]) - 120, Y(this.hit[1]) - 24, 16, "#c0392b", true); }
+    txt(ctx, (this.fr ? "Құлайтын жүйе: g = 0, траекториялар түзу" : "Жермен байланысқан жүйе") + `   t = ${fx(this.t, 2)} с`, 14, 22, 14, "#1d2a44", true);
+    txt(ctx, "L", (X(0) + X(L)) / 2, y0 + 20, 14, "#6b6457", true); txt(ctx, "3L", X(L) + 36, Y(1.5 * L), 14, "#6b6457", true);
+  }
+};
+
+/* --- альпинист --- */
+ANIM.c = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="cC"></canvas></div>
+  <div class="caption">1) Жіп бос — m₂ еркін құлайды (2l₂). 2) Жіп кенет керіледі — серпімсіз «соққы». 3) m₁ көтеріліп, жүйе тежеледі (m₁ &gt; m₂ болса). Баяулатылған.</div></div>
+  <div class="ctrl">
+   ${slider("cm1", "m₁ (жердегі)", .5, 6, .1, 3, "# кг")}
+   ${slider("cm2", "m₂ (құлайтын)", .5, 4, .1, 1, "# кг")}
+   ${slider("cl1", "l₁ (блок биіктігі)", 2, 8, .5, 5, "# м")}
+   ${slider("cl2", "l₂", .5, 3, .1, 2, "# м")}
+   <button class="btn pri" id="cGo">▶ Құлату</button>
+   <div class="readout" id="cOut"></div>
+  </div></div>`,
+  init() { bindSliders($("#sheet"), () => this.reset()); $("#cGo").onclick = () => { this.reset(); this.run = true; }; this.resize(); this.reset(); },
+  resize() { this.cv = setupCanvas($("#cC")); },
+  reset() {
+    const m1 = val("cm1"), m2 = val("cm2"), l1 = val("cl1"), l2 = val("cl2"), g = 10;
+    Object.assign(this, { m1, m2, l1, l2, y2: l1 + l2, v: 0, y1: 0, t: 0, ph: 0, run: false, end: "", hist: [] });
+    const u = m2 * Math.sqrt(4 * g * l2) / (m1 + m2);
+    let txtR;
+    if (l2 > l1) txtR = '<span class="bad">l₂ &gt; l₁: жіп керілгенше жерге соғылады</span>';
+    else if (m1 <= m2) txtR = '<span class="bad">m₁ ≤ m₂: жүйе тежелмейді — жерге соғылады</span>';
+    else { const d = 2 * m2 * m2 * l2 / (m1 * m1 - m2 * m2), h = l1 - l2 - d, T = 2 * Math.sqrt(l2 / g) * m1 / (m1 - m2); txtR = h > 0 ? `h = <b>${fx(h, 2)} м</b>, t = <b>${fx(T, 2)} с</b><br><span class="ok">Жерге жетпей тоқтайды</span>` : '<span class="bad">Тежелу жолы жетпейді — жерге соғылады</span>'; }
+    $("#cOut").innerHTML = `Жіп керілгенде v = 2√(gl₂) = ${fx(Math.sqrt(4 * g * l2), 2)} м/с<br>«Соққыдан» кейін u = ${fx(u, 2)} м/с<br>${txtR}<br>Шарт: l₁ &gt; l₂(m₁²+m₂²)/(m₁²−m₂²)${m1 > m2 ? " = " + fx(l2 * (m1 * m1 + m2 * m2) / (m1 * m1 - m2 * m2), 2) + " м" : ""}`;
+  },
+  step(dt) {
+    const { ctx, W, H } = this.cv, g = 10;
+    if (this.run && !this.end) {
+      let rem = dt * .5;
+      while (rem > 0 && !this.end) {
+        const h = Math.min(rem, .002); rem -= h; this.t += h;
+        if (this.ph === 0) { this.v += g * h; this.y2 -= this.v * h; if (this.y2 <= this.l1 - this.l2) { this.y2 = this.l1 - this.l2; this.ph = 1; this.v = this.m2 * this.v / (this.m1 + this.m2); this.jerkT = this.t; } }
+        else { const a = (this.m2 - this.m1) * g / (this.m1 + this.m2); this.v += a * h; if (this.v <= 0) { this.v = 0; this.end = "stop"; } this.y2 -= this.v * h; this.y1 += this.v * h; }
+        if (this.y2 <= .15) { this.y2 = .15; this.end = "ground"; }
+        if (this.y1 >= this.l1 - .4) { this.y1 = this.l1 - .4; this.end = this.end || "pulley"; }
+        if (!this.hist.length || this.t - this.hist[this.hist.length - 1][0] > .01) this.hist.push([this.t, this.v]);
+      }
+    }
+    const top = 20, bot = H - 30, maxY = 8 + 3.4, sc = (bot - top) / maxY, Y = y => bot - y * sc, cx = Math.min(200, W * .3);
+    ctx.fillStyle = "#f6f3ec"; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#b8a98c"; ctx.fillRect(0, bot, W, H - bot);
+    const py = Y(this.l1), r = 14;
+    // блоктар
+    ctx.strokeStyle = "#555"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, py - r, r, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, py + r, r, 0, 7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx, py - r); ctx.lineTo(cx + 50, py); ctx.lineTo(cx, py + r); ctx.moveTo(cx + 50, py - 20); ctx.lineTo(cx + 50, py + 20); ctx.stroke();
+    // m1
+    const x1 = cx + r, y1p = Y(this.y1);
+    ctx.strokeStyle = "#333"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x1, py + r); ctx.lineTo(x1, y1p - 18); ctx.stroke();
+    ctx.fillStyle = "#8a5a14"; ctx.fillRect(x1 - 20, y1p - 18, 40, 18); txt(ctx, "m₁", x1 - 9, y1p - 4, 12, "#fff", true);
+    // m2
+    const x2 = cx - r, y2p = Y(this.y2), ropeTop = py - r, dist = ropeTop - (y2p + 0), Lr = this.l2 * sc;
+    ctx.strokeStyle = "#333"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x2, ropeTop);
+    const gap = Math.abs(y2p - ropeTop);
+    if (gap >= Lr - 1) ctx.lineTo(x2, y2p);
+    else { const sag = Math.sqrt(Math.max(0, Lr * Lr - gap * gap)) / 2; const midY = (ropeTop + y2p) / 2 + (y2p > ropeTop ? sag : sag); ctx.quadraticCurveTo(x2 - sag * 1.2, Math.max(ropeTop, y2p) + sag, x2, y2p); }
+    ctx.stroke();
+    ctx.fillStyle = "#c4581b"; ctx.fillRect(x2 - 34, y2p - (y2p < ropeTop ? 16 : 0), 34, 16); txt(ctx, "m₂", x2 - 26, y2p + (y2p < ropeTop ? -4 : 12), 12, "#fff", true);
+    // шкала
+    ctx.fillStyle = "#6b6457"; ctx.font = "12px Segoe UI"; for (let y = 0; y <= 10; y += 2) { ctx.fillText(y + " м", 6, Y(y) + 4); ctx.strokeStyle = "#e6dfd0"; ctx.beginPath(); ctx.moveTo(40, Y(y)); ctx.lineTo(cx - 60, Y(y)); ctx.stroke(); }
+    const msg = this.ph === 0 ? (this.run ? "1) Жіп бос — еркін түсу" : "Дайын") : this.end === "stop" ? `3) Тоқтады! h = ${fx(this.y2, 2)} м, t = ${fx(this.t, 2)} с` : this.end === "ground" ? "Жерге соғылды!" : this.end === "pulley" ? "m₁ блокқа жетті" : "2) Жіп керілді → 3) тежелу";
+    txt(ctx, msg, cx + 70, 30, 15, this.end === "ground" ? "#c0392b" : "#1d2a44", true);
+    // v(t)
+    const gx = cx + 90, gW = W - gx - 20, gy = 60, gH = H * .45;
+    if (gW > 120) {
+      ctx.strokeStyle = "#1d2a44"; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx, gy + gH); ctx.lineTo(gx + gW, gy + gH); ctx.stroke();
+      txt(ctx, "m₂ жылдамдығы v(t)", gx + 6, gy + 12, 12);
+      const vmax = 2 * Math.sqrt(10 * 3) + 1, tmax = 3;
+      ctx.strokeStyle = "#c4581b"; ctx.lineWidth = 2.5; ctx.beginPath(); this.hist.forEach(([t, v], i) => { const X = gx + t / tmax * gW, Yv = gy + gH - v / vmax * gH; i ? ctx.lineTo(X, Yv) : ctx.moveTo(X, Yv); }); ctx.stroke();
+      if (this.jerkT) { const X = gx + this.jerkT / tmax * gW; ctx.setLineDash([4, 4]); ctx.strokeStyle = "#c0392b"; ctx.beginPath(); ctx.moveTo(X, gy); ctx.lineTo(X, gy + gH); ctx.stroke(); ctx.setLineDash([]); txt(ctx, "жіп керілді", X + 4, gy + 26, 12, "#c0392b"); }
+    }
+  }
+};
+
+/* --- линза + айна --- */
+ANIM.o = {
+  html: `<div class="lab"><div><div class="stage"><canvas id="oC"></canvas></div>
+  <div class="caption">Қызғылт сары сәулелер — линзадан сынғандар (Л кескіні), көк сәулелер — линзаның алдыңғы бетінен шағылғандар (А кескіні, дөңес айна). Пунктир — жалған кескінге апаратын жалғастар.</div></div>
+  <div class="ctrl">
+   ${slider("oR", "Қисықтық радиусы R (= F)", 10, 30, 1, 20, "# см")}
+   ${slider("od", "Шамнан линзаға дейін d", 4, 80, 1, 30, "# см")}
+   <div class="readout" id="oOut"></div>
+  </div></div>`,
+  init() { bindSliders($("#sheet"), () => this.calc()); this.resize(); this.calc(); },
+  resize() { this.cv = setupCanvas($("#oC")); },
+  calc() {
+    const R = val("oR"), d = val("od");
+    this.R = R; this.d = d; this.f1 = Math.abs(d - R) < .01 ? Infinity : d * R / (d - R); this.f2 = d * R / (2 * d + R);
+    const D = Math.abs(this.f1 - this.f2);
+    $("#oOut").innerHTML = `F = R = ${R} см; айна: |F| = ${fx(R / 2, 1)} см<br>Л кескіні: f₁ = ${isFinite(this.f1) ? fx(this.f1, 1) + " см " + (this.f1 > 0 ? "(нақты)" : "(жалған)") : "∞"}<br>А кескіні: ${fx(this.f2, 1)} см беттің артында (жалған)<br>Δ = <b>${isFinite(D) ? fx(D, 1) + " см" : "∞"}</b><br>Формула: dR(d+2R)/(|d−R|(2d+R)) = ${isFinite(D) ? fx(d * R * (d + 2 * R) / (Math.abs(d - R) * (2 * d + R)), 1) : "∞"}`;
+  },
+  step() {
+    const { ctx, W, H } = this.cv, R = this.R, d = this.d, f1 = this.f1, f2 = this.f2, ho = 5;
+    const xmin = -(d + 8), xmax = Math.max(40, Math.min(isFinite(f1) && f1 > 0 ? f1 + 10 : 40, 150)), sc = (W - 40) / (xmax - xmin), X = x => 20 + (x - xmin) * sc, cy = H / 2, sy = Math.min(14, (H / 2 - 30) / 12), Y = y => cy - y * sy;
+    ctx.fillStyle = "#0f1b2d"; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = "#5c6b80"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(W, cy); ctx.stroke();
+    // фокустар
+    [[R, "F"], [-R, "F"], [R / 2, "Fа"]].forEach(([x, l]) => { ctx.fillStyle = l === "Fа" ? "#6fa8ff" : "#ffb35c"; ctx.beginPath(); ctx.arc(X(x), cy, 3.5, 0, 7); ctx.fill(); txt(ctx, l, X(x) - 6, cy + 18, 12, ctx.fillStyle); });
+    // линза
+    const lh = 11 * sy; ctx.fillStyle = "rgba(160,210,255,.25)"; ctx.strokeStyle = "#a9d4ff"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.ellipse(X(0), cy, 8, lh, 0, 0, 7); ctx.fill(); ctx.stroke();
+    // шам
+    const sx = X(-d); ctx.strokeStyle = "#ffd57a"; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(sx, cy); ctx.lineTo(sx, Y(ho)); ctx.stroke();
+    ctx.fillStyle = "#ffcf4a"; ctx.beginPath(); ctx.ellipse(sx, Y(ho) - 6, 4, 8, 0, 0, 7); ctx.fill(); txt(ctx, "шам", sx - 14, cy + 34, 12, "#ffd57a");
+    const ray = (pts, col, dash) => { ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.setLineDash(dash ? [5, 5] : []); ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y))); ctx.stroke(); ctx.setLineDash([]); };
+    // ЛИНЗА: параллель сәуле → F; центр арқылы
+    const far = xmax + 5;
+    ray([[-d, ho], [0, ho], [far, ho - ho / R * far]], "#ffb35c");
+    ray([[-d, ho], [far, ho - ho / d * (far + d)]], "#ffb35c");
+    let i1 = null;
+    if (isFinite(f1)) { const hi = -ho * f1 / d; i1 = [f1, hi]; if (f1 < 0) { ray([[0, ho], [f1, hi]], "#ffb35c", 1); ray([[-d, ho], [f1, hi]], "#ffb35c", 1); } }
+    // АЙНА: параллель сәуле шағылып, жалған фокустан (R/2) шыққандай; төбеге түскен сәуле симметриялы шағылады
+    const hm = ho * f2 / d; // жалған кескін биіктігі (тік)
+    ray([[-d, ho], [0, ho], [xmin, ho + (ho / (R / 2)) * (-xmin)]], "#6fa8ff");
+    ray([[0, ho], [R / 2, 0]], "#6fa8ff", 1);
+    ray([[-d, ho], [0, 0], [xmin, -ho / d * (-xmin)]], "#6fa8ff");
+    ray([[0, 0], [f2, hm]], "#6fa8ff", 1);
+    // кескіндер
+    const img = ([x, y], col, lab) => { if (x < xmin || x > xmax + 20) return; ctx.strokeStyle = col; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(X(x), cy); ctx.lineTo(X(x), Y(y)); ctx.stroke(); txt(ctx, lab, X(x) + 5, Y(y) + (y > 0 ? -6 : 16), 14, col, true); };
+    if (i1) img(i1, "#ffb35c", "Л"); img([f2, hm], "#6fa8ff", "А");
+    if (i1 && Math.abs(i1[0] - f2) < 1e4) { const a = X(Math.min(i1[0], f2)), b = X(Math.max(i1[0], f2)), yb = H - 30; ctx.strokeStyle = "#8be08f"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(a, yb - 6); ctx.lineTo(a, yb); ctx.lineTo(b, yb); ctx.lineTo(b, yb - 6); ctx.stroke(); txt(ctx, "Δ = " + fx(Math.abs(i1[0] - f2), 1) + " см", (a + b) / 2 - 36, yb + 16, 14, "#8be08f", true); }
+    else txt(ctx, "d = R: линза кескіні шексіздікте", 20, H - 16, 14, "#ff9b8f", true);
+  }
+};
+
+/* ===================== ИНТЕРФЕЙС ===================== */
+let cur = 0, curTab = "ladder";
+const nDone = p => (solved[p.id + "main"] ? 1 : 0) + p.similar.filter((_, j) => solved[p.id + j]).length;
+function renderNav() {
+  const tot = P.reduce((s, p) => s + nDone(p), 0); $("#total").textContent = `${tot} / ${P.length * 4}`;
+  $("#nav").innerHTML = `<div class="ladder-title"><span>оңай</span><span>↓</span><span>қиын</span></div>` +
+    P.map((p, i) => `<button class="pcard ${i === cur ? "on" : ""}" style="--c:var(${p.color})" data-i="${i}"><span class="no">${i + 1}</span><span><b>${p.name}</b><small>${p.src}</small><br><span class="st">${"★".repeat(p.stars)}${"☆".repeat(4 - p.stars)}</span><div class="bar"><i style="width:${nDone(p) / 4 * 100}%"></i></div></span></button>`).join("") +
+    `<div class="note">Есептер қиындығы бойынша реттелген. Әр есепте: баспалдақ → анимация → олимпиада есебі → C деңгейлі есептер. Нәтиже осы құрылғыда сақталады.</div>`;
+  $("#nav").querySelectorAll(".pcard").forEach(b => b.onclick = () => { cur = +b.dataset.i; curTab = "ladder"; render(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+}
+function render() {
+  active = null; renderNav();
+  const p = P[cur]; document.documentElement.style.setProperty("--acc", `var(${p.color})`);
+  const tabs = [["ladder", "1 · Баспалдақ"], ["anim", "2 · Анимация"], ["solve", "3 · Олимпиада есебі"], ["sim", "4 · C деңгейлі есептер"]];
+  $("#sheet").innerHTML = `<div class="phead"><h2>${cur + 1}. ${p.name}</h2><div class="pts">${p.src} · ${p.short} · қиындығы ${"★".repeat(p.stars)}</div></div>
+  <div class="tabs">${tabs.map(([k, n]) => `<button class="tab ${k === curTab ? "on" : ""}" data-k="${k}">${n}</button>`).join("")}</div><div class="pane" id="pane"></div>`;
+  $("#sheet").querySelectorAll(".tab").forEach(b => b.onclick = () => { curTab = b.dataset.k; render(); });
+  const pane = $("#pane");
+  if (curTab === "ladder") renderLadder(p, pane);
+  if (curTab === "anim") { pane.innerHTML = ANIM[p.id].html + nextBtn("solve", "Олимпиада есебіне өту"); active = ANIM[p.id]; active.init(); }
+  if (curTab === "solve") renderSolve(p, pane);
+  if (curTab === "sim") renderSim(p, pane);
+  pane.querySelectorAll("[data-go]").forEach(b => b.onclick = () => { curTab = b.dataset.go; render(); });
+}
+const nextBtn = (k, l) => `<div class="btns" style="margin-top:18px"><button class="btn pri" data-go="${k}">${l} →</button></div>`;
+function renderLadder(p, pane) {
+  pane.innerHTML = `<h3>Керек білім</h3><div class="know">${p.know.map(([a, b]) => `<div><b>${a}</b>${b}</div>`).join("")}</div>
+  <div class="box why"><b>Олимпиадалық кілт:</b> ${p.key}</div>
+  <h3>Баспалдақ: оңайдан қиынға</h3><p>Әр сатыдағы шағын есепті шығар — жауап дұрыс болса, келесі саты ашылады. Соңғы саты — олимпиада есебінің өзі.</p>
+  <div class="rungs">${p.rungs.map(([lv, q, u], i) => `<div class="rung ${i === 0 ? "show" : ""}" data-n="${i + 1}" data-r="${i}"><div class="lv">${lv}</div><p>${q}</p>
+    <div class="answer"><input inputmode="decimal"><span>${u}</span><button class="btn sm pri" data-a="chk">Тексеру</button><button class="btn sm" data-a="show">Көрсету</button><span class="fb"></span></div><div class="ex"></div></div>`).join("")}
+    <div class="rung final" data-n="★" data-r="${p.rungs.length}"><div class="lv">Олимпиада деңгейі</div><p>Енді сатылар дайын. Анимацияда процесті көзбен көр, содан кейін олимпиада есебін өзің шығар.</p>${nextBtn("anim", "Анимацияға өту")}</div></div>`;
+  pane.querySelectorAll(".rung[data-r]").forEach(rg => {
+    const i = +rg.dataset.r; if (i >= p.rungs.length) return; const [, , , ans, ex] = p.rungs[i];
+    const open = () => { rg.querySelector(".ex").innerHTML = "💡 " + ex; rg.querySelector(".ex").classList.add("show"); const nx = pane.querySelector(`.rung[data-r="${i + 1}"]`); if (nx && !nx.classList.contains("show")) setTimeout(() => { nx.classList.add("show"); nx.scrollIntoView({ behavior: "smooth", block: "nearest" }); }, 400); };
+    rg.querySelector('[data-a="chk"]').onclick = () => { const v = num(rg.querySelector("input").value), fb = rg.querySelector(".fb"); if (isNaN(v)) { fb.className = "fb bad"; fb.textContent = "Сан енгіз"; return; } if (near(v, ans, .03)) { fb.className = "fb ok"; fb.textContent = "✔ Дұрыс!"; open(); } else { fb.className = "fb bad"; fb.textContent = "✘ Қайта ойлан"; } };
+    rg.querySelector('[data-a="show"]').onclick = () => { const fb = rg.querySelector(".fb"); fb.className = "fb"; fb.textContent = "Жауабы: " + fx(ans, 3) + " " + p.rungs[i][2]; open(); };
+  });
+}
+function renderSolve(p, pane) {
+  pane.innerHTML = `<h3>Шарты</h3><div class="cond"><div class="txt"><span class="src">${p.src}</span><br>${p.cond}</div>${p.fig ? `<div>${p.fig()}</div>` : ""}</div>
+  <h3>Өзің шығар</h3>
+  ${p.inputs.map((inp, i) => `<div class="answer"><b>${inp.label}</b><input id="ans${i}" inputmode="decimal"><span>${inp.unit}</span><button class="btn sm pri" data-i="${i}">Тексеру</button><span class="fb" id="fb${i}"></span></div>`).join("")}
+  <div class="btns"><button class="btn sm" id="hintB">💡 Кеңес (${p.hints.length})</button><button class="btn sm" id="stepB">Шешімді қадаммен көрсету →</button><button class="btn sm" id="allB">Бәрін ашу</button></div>
+  ${p.hints.map(h => `<div class="hint">${h}</div>`).join("")}
+  <div class="steps">${p.steps.map(([t, b, c]) => `<div class="step ${c ? "chk" : ""}"><h4>${t}</h4>${b}</div>`).join("")}</div>` + nextBtn("sim", "C деңгейлі есептерге өту");
+  if (p.id === "g") grapheneFig($("#figG"));
+  pane.querySelectorAll(".answer .btn").forEach(b => b.onclick = () => {
+    const i = +b.dataset.i, inp = p.inputs[i], v = num($("#ans" + i).value), fb = $("#fb" + i);
+    if (isNaN(v)) { fb.className = "fb bad"; fb.textContent = "Сан енгіз"; return; }
+    if (near(v, inp.ans, inp.tol || .03)) { fb.className = "fb ok"; fb.textContent = "✔ Дұрыс!"; }
+    else if (inp.alt && near(v, inp.alt, .05)) { fb.className = "fb ok"; fb.textContent = "✔ " + inp.altMsg; }
+    else { fb.className = "fb bad"; fb.textContent = "✘ Әлі емес — кеңесті қара"; }
+    if (p.inputs.every((_, j) => $("#fb" + j).classList.contains("ok"))) { solved[p.id + "main"] = 1; store.set("aul9_solved", solved); renderNav(); }
+  });
+  let hi = 0, si_ = 0; const hs = pane.querySelectorAll(".hint"), ss = pane.querySelectorAll(".step");
+  $("#hintB").onclick = () => { if (hi < hs.length) hs[hi++].classList.add("show"); };
+  $("#stepB").onclick = () => { if (si_ < ss.length) { ss[si_].classList.add("show"); ss[si_].scrollIntoView({ behavior: "smooth", block: "nearest" }); si_++; } };
+  $("#allB").onclick = () => { ss.forEach(s => s.classList.add("show")); si_ = ss.length; };
+}
+function renderSim(p, pane) {
+  const done = () => p.similar.filter((_, j) => solved[p.id + j]).length;
+  pane.innerHTML = `<p>Олимпиада есебінің идеясын басқаша қолданатын C деңгейлі есептер. Алдымен өзің ойлан, кейін кеңесті, ең соңында шешімді аш.</p><p class="score" id="simScore"></p>
+  ${p.similar.map((s, j) => `<div class="sim ${solved[p.id + j] ? "done" : ""}" id="sim${j}"><span class="lvl">C деңгей</span>
+    <p style="padding-right:80px"><b>${j + 1}.</b> ${s.q}</p>
+    <div class="answer"><input id="sa${j}" inputmode="decimal"><span>${s.unit}</span><button class="btn sm pri" data-j="${j}" data-a="chk">Тексеру</button><button class="btn sm" data-j="${j}" data-a="hint">💡</button><button class="btn sm" data-j="${j}" data-a="sol">Шешімі</button><span class="fb" id="sf${j}"></span></div>
+    <div class="hint" id="sh${j}">${s.hint}</div><div class="sol" id="ss${j}">${s.sol}</div></div>`).join("")}` +
+    (cur < P.length - 1 ? nextBtn("next", `Келесі есеп: ${P[cur + 1].name}`) : `<div class="box tip"><b>Жарайсың!</b> Барлық 8 есептің баспалдағынан өттің.</div>`);
+  const upd = () => $("#simScore").textContent = `Шешілді: ${done()} / ${p.similar.length}`; upd();
+  pane.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
+    const j = +b.dataset.j, s = p.similar[j], a = b.dataset.a;
+    if (a === "hint") $("#sh" + j).classList.add("show");
+    if (a === "sol") $("#ss" + j).classList.add("show");
+    if (a === "chk") {
+      const v = num($("#sa" + j).value), fb = $("#sf" + j);
+      if (isNaN(v)) { fb.className = "fb bad"; fb.textContent = "Сан енгіз"; return; }
+      if (near(v, s.ans, s.tol || .03)) { fb.className = "fb ok"; fb.textContent = "✔ Дұрыс!"; solved[p.id + j] = 1; store.set("aul9_solved", solved); $("#sim" + j).classList.add("done"); upd(); renderNav(); }
+      else { fb.className = "fb bad"; fb.textContent = "✘ Қайта тексер"; }
+    }
+  });
+  const nb = pane.querySelector('[data-go="next"]'); if (nb) nb.onclick = () => { cur++; curTab = "ladder"; render(); window.scrollTo({ top: 0, behavior: "smooth" }); };
+}
+
+/* ===================== ЦИКЛ ===================== */
+let last = performance.now();
+function loop(now) { const dt = Math.min(.1, (now - last) / 1000); last = now; if (active && active.cv) active.step(dt); requestAnimationFrame(loop); }
+addEventListener("resize", () => { if (active && active.resize) active.resize(); });
+render(); requestAnimationFrame(loop);
+</script>
+</body>
+</html>
